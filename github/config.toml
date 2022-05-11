@@ -1,0 +1,61 @@
+baseURL = 'https://swsmith.cc/github'
+languageCode = 'en-us'
+title = 'Github Gist Blog'
+uglyurls = true
+
+# theme
+theme="archie"
+
+[params]
+subtitle = "Blog that's mostly made up with my [Github Gists](https://gist.github.com/sean-smith)"
+
+# Social Tags
+[[params.social]]
+name = "GitHub"
+icon = "github"
+url = "https://github.com/sean-smith"
+
+[[params.social]]
+name = "Twitter"
+icon = "twitter"
+url = "https://twitter.com/seanwssmith/"
+
+[[params.social]]
+name = "Instagram"
+icon = "instagram"
+url = "https://instagram.com/seanfliesthings"
+
+[[params.social]]
+name = "LinkedIn"
+icon = "linkedin"
+url = "https://www.linkedin.com/in/seanwssmith/"
+
+[[params.social]]
+name = "Email"
+icon = "mail"
+url = "mailto:sean@swsmith.cc"
+
+
+# Main menu Items
+
+[[menu.main]]
+name = "About"
+url = "/about.html"
+weight = 2
+
+[[menu.main]]
+name = "Posts"
+url = "/posts.html"
+weight = 1
+
+# deploy to s3
+[deployment]
+order = [".jpg$", ".gif$"]
+
+[[deployment.targets]]
+# An arbitrary name for this target.
+name = "s3://swsmith.cc"
+# S3; see https://gocloud.dev/howto/blob/#s3
+# For S3-compatible endpoints, see https://gocloud.dev/howto/blob/#s3-compatible
+URL = "s3://swsmith.cc?region=us-east-1&prefix=github/"
+cloudFrontDistributionID = "E1JNRZZSY4W9ID"
