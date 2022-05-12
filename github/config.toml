@@ -8,7 +8,7 @@ theme="archie"
 
 [module]
 [[module.imports]]
-path = 'github.com/athul/archie'
+path = 'archie'
 
 [params]
 subtitle = "Blog that's mostly made up with my [Github Gists](https://gist.github.com/sean-smith)"
