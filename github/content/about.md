@@ -4,7 +4,7 @@ type: page
 draft: false
 ---
 
-![Profile Pic](/img/sean.jpg)
+![Profile Pic](img/sean.jpg)
 
 I'm a Solution Architect at [AWS](https://aws.amazon.com/hpc/) working High Performance and Scientific Computing.
 

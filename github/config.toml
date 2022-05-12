@@ -1,14 +1,10 @@
-baseURL = 'https://swsmith.cc/github'
+baseURL = 'https://github.swsmith.cc/'
 languageCode = 'en-us'
 title = 'Github Gist Blog'
 uglyurls = true
 
 # theme
 theme="archie"
-
-[module]
-[[module.imports]]
-path = 'archie'
 
 [params]
 subtitle = "Blog that's mostly made up with my [Github Gists](https://gist.github.com/sean-smith)"
