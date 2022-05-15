@@ -1,6 +1,6 @@
-baseURL = 'https://github.swsmith.cc/'
+baseURL = 'https://swsmith.cc/'
 languageCode = 'en-us'
-title = 'Github Gist Blog'
+title = "Sean's Github Gist Blog 🚀"
 uglyurls = true
 
 # theme
