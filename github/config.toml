@@ -6,6 +6,9 @@ uglyurls = true
 # theme
 theme="archie"
 
+# google analytics
+googleAnalytics = "UA-55628602-1"
+
 [params]
 subtitle = "Blog that's mostly made up with my [Github Gists](https://gist.github.com/sean-smith)"
 
