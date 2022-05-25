@@ -9,6 +9,9 @@ theme="archie"
 # google analytics
 googleAnalytics = "UA-55628602-1"
 
+# disqus comments
+disqusShortname = "swsmith-cc"
+
 [params]
 subtitle = "Blog that's mostly made up with my [Github Gists](https://gist.github.com/sean-smith)"
 
