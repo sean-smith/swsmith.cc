@@ -45,6 +45,11 @@ url = "mailto:sean@swsmith.cc"
 # Main menu Items
 
 [[menu.main]]
+name = "Websites"
+url = "/websites.html"
+weight = 3
+
+[[menu.main]]
 name = "About"
 url = "/about.html"
 weight = 2
