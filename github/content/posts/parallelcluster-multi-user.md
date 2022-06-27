@@ -67,17 +67,21 @@ Upload it to S3
 $ aws s3 cp create-users.sh s3://[your_bucket]/
 ```
 
-Update your config:
+In the next sections I give examples that use [Pcluster Manager](https://www.hpcworkshops.com/03-deploy-pcm.html) or the [AWS ParallelCluster CLI](https://www.hpcworkshops.com/04-pcluster-cli.html). You only need to follow one path. I reccomend [Pcluster Manager](https://www.hpcworkshops.com/03-deploy-pcm.html) for most users.
 
-## ParallelCluster 2.X
+## Pcluster Manager
 
-```ini
-[cluster clustername]
-s3_read_resource = arn:aws:s3:::[your_bucket]/*
-post_install = s3://[your_bucket]/create-users.sh
-```
+To add this in Pcluster manager:
+1. **Edit** the cluster > skip to **Queues** section
+2. Click on **Advanced options**
+3. Paste in `s3://[bucket]/create-users.sh` in the **On Configured** Section
+4. Expand **IAM Policies** > add `arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess` and click **Add**
 
-## ParallelCluster 3.X
+![Add Post Install Script](/img/multi-user/pcmanager-post-install.png)
+
+Stop and update the running cluster.
+
+## ParallelCluster 3.X CLI (optional)
 
 ```yaml
 CustomActions:
@@ -88,19 +92,22 @@ Iam:
         - BucketName: [your_bucket]
 ```
 
-Stop and update the running cluster:
+## Pcluster Manager
 
-## ParallelCluster 2.X
+Once you've updated the Queue, proceed to **Review** screen:
 
-```bash
-CLUSTER_NAME=<name of your cluster>
-pcluster stop $CLUSTER_NAME
-# no need to wait 
-pcluster update $CLUSTER_NAME
-pcluster start $CLUSTER_NAME
-```
+1. Click **Stop Compute Fleet**
+2. **Dry Run** to see if the update will work. You may see the warning `UrlValidator: The S3 object 's3://bucket/create-users.sh' does not exist or you do not have access to it.`. You can safely ignore this.
+3. **Update** to perform the update
 
-## ParallelCluster 3.X
+![Pcmanager Update](/img/multi-user/pcmanager-update.png)
+
+After the update has completed make sure to start the compute fleet:
+
+![Pcmanager Start](/img/multi-user/pcmanager-start.png)
+
+
+## ParallelCluster 3.X CLI (optional)
 
 ```bash
 CLUSTER_NAME=<name of your cluster>
