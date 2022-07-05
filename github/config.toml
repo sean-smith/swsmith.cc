@@ -45,9 +45,9 @@ url = "mailto:sean@swsmith.cc"
 # Main menu Items
 
 [[menu.main]]
-name = "Websites"
-url = "/websites.html"
-weight = 3
+name = "Posts"
+url = "/posts.html"
+weight = 1
 
 [[menu.main]]
 name = "About"
@@ -55,9 +55,15 @@ url = "/about.html"
 weight = 2
 
 [[menu.main]]
-name = "Posts"
-url = "/posts.html"
-weight = 1
+name = "Websites"
+url = "/websites.html"
+weight = 3
+
+[[menu.main]]
+name = "Slides"
+url = "/slides.html"
+weight = 4
+
 
 # deploy to s3
 [deployment]
