@@ -4,7 +4,7 @@ description:
 date: 2021-11-30
 tldr: Create DCV Instances in their own queue with AWS ParallelCluster.
 draft: false
-tags: [dcv, aws parallelcluster, hpc, aws, slurm]
+tags: [dcv, aws parallelcluster, hpc, aws, slurm, starccm+]
 ---
 
 # DCV Visualization Queue
