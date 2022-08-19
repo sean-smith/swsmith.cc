@@ -76,7 +76,7 @@ Scheduling:
 dbus-launch gsettings set org.gnome.desktop.session idle-delay 0 > /dev/null
 # Set a password
 password=$(openssl rand -base64 32)
-echo $password | sudo passwd ec2-user --stdin > /dev/null
+echo $password | sudo passwd $USER --stdin > /dev/null
 # start DCV server and create session
 sudo systemctl start dcvserver
 dcv create-session $SLURM_JOBID
@@ -84,7 +84,7 @@ dcv create-session $SLURM_JOBID
 
 ip=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
 printf "\e[32mClick the following URL to connect:\e[0m"
-printf "\n=> \e[34mhttps://$ip:8443?username=ec2-user&password=$password\e[0m\n"
+printf "\n=> \e[34mhttps://$ip:8443?username=$USER&password=$password\e[0m\n"
 
 while true; do
    sleep 1
@@ -117,7 +117,7 @@ An alternative to the above approach where we opened up the Security Group to al
 dbus-launch gsettings set org.gnome.desktop.session idle-delay 0 > /dev/null
 # Set a password
 password=$(openssl rand -base64 32)
-echo $password | sudo passwd ec2-user --stdin > /dev/null
+echo $password | sudo passwd $USER --stdin > /dev/null
 # start DCV server and create session
 sudo systemctl start dcvserver
 dcv create-session $SLURM_JOBID
@@ -127,7 +127,7 @@ printf "\e[32mFor a no-ingress cluster, you'll need to run the following command
 printf "\n=> \e[37m\taws ssm start-session --target $instance_id --document-name AWS-StartPortForwardingSession --parameters '{\"portNumber\":[\"8443\"],\"localPortNumber\":[\"8443\"]}'\e[0m\n"
 
 printf "\n\n\e[32mThen click the following URL to connect:\e[0m"
-printf "\n=> \e[34mhttps://localhost:8443?username=ec2-user&password=$password\e[0m\n"
+printf "\n=> \e[34mhttps://localhost:8443?username=$USER&password=$password\e[0m\n"
 
 while true; do
    sleep 1
