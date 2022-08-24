@@ -70,6 +70,7 @@ Gromacs is a popular open source Molecular Dynamics application. It supports GPU
     ```bash
     spack install -j 8 gromacs +blas +lapack %intel ^intel-oneapi-mpi
     ```
+
 1. This will take `~45 minutes`. After it completes, we can see the installed packages with:
 
     ```bash
