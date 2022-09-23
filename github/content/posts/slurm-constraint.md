@@ -1,7 +1,7 @@
 ---
 title: AWS ParallelCluster Slurm Constraints
 description:
-date: 2022-08-12
+date: 2022-09-23
 tldr: Create a Slurm queue with multiple instance types and select the instance type at job submission using Slurm constraints
 draft: false
 tags: [aws parallelcluster, mpi, slurm, aws]
@@ -63,7 +63,7 @@ queue0*     up   infinite    200  idle~ queue0-dy-queue0-c6i32xlarge-[1-100],que
 queue0*     up   infinite     99  down~ queue0-dy-queue0-m6i32xlarge-[2-100]
 ```
 
-It'll set that node to `down#` and the rest of the compute fleet will go into `down~` for 10 minutes if it detects one of the following responses from the EC2 API:
+It'll set that node to `down#` and the rest of the compute resource will go into `down~` for 10 minutes if it detects one of the following responses from the EC2 API:
 
 * `InsufficientInstanceCapacity`
 * `InsufficientHostCapacity`
