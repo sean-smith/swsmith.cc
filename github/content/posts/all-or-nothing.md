@@ -7,6 +7,9 @@ draft: false
 tags: [aws parallelcluster, mpi, slurm, aws]
 ---
 
+Update: This has been turned into an official AWS Blogpost: [Minimize HPC compute costs with all-or-nothing instance launching
+](https://aws.amazon.com/blogs/hpc/minimize-hpc-compute-costs-with-all-or-nothing-instance-launching/)
+
 # Enable All-or-Nothing Scaling with AWS ParallelCluster
 
 [All or nothing scaling](https://github.com/aws/aws-parallelcluster/wiki/Configuring-all_or_nothing_batch-launches) is useful when you need to run MPI jobs that can't start until all `N` instances have joined the cluster.
