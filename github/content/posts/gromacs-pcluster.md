@@ -4,6 +4,7 @@ description:
 date: 2022-08-16
 tldr: Setup Gromacs with Spack on AWS ParallelCluster
 draft: false
+og_image: img/gromacs/logo.png
 tags: [aws parallelcluster, gromacs, slurm, aws, spack]
 ---
 

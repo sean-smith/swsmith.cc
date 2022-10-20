@@ -4,6 +4,7 @@ description:
 date: 2022-10-19
 tldr: Setup LS-Dyna with AWS ParallelCluster
 draft: false
+og_image: img/ls-dyna/car2car-1.png
 tags: [LS-Dyna, aws parallelcluster, FSx lustre, Ansys]
 ---
 

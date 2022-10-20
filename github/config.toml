@@ -14,6 +14,7 @@ disqusShortname = "swsmith-cc"
 
 [params]
 subtitle = "Blog that's mostly made up with my [Github Gists](https://gist.github.com/sean-smith)"
+og_image = "/img/sean.jpg"
 
 # Social Tags
 [[params.social]]
@@ -63,16 +64,3 @@ weight = 3
 name = "Slides"
 url = "/slides.html"
 weight = 4
-
-
-# deploy to s3
-[deployment]
-order = [".jpg$", ".gif$"]
-
-[[deployment.targets]]
-# An arbitrary name for this target.
-name = "s3://swsmith.cc"
-# S3; see https://gocloud.dev/howto/blob/#s3
-# For S3-compatible endpoints, see https://gocloud.dev/howto/blob/#s3-compatible
-URL = "s3://swsmith.cc?region=us-east-1&prefix=github/"
-cloudFrontDistributionID = "E1JNRZZSY4W9ID"
