@@ -166,6 +166,38 @@ mpirun -np ${NCORES} ${BINARY} I=${INPUT_FILE} MEMORY=${MEMORY} MEMORY2=${MEMORY
 
 We've set `MEMORY = 2G` and `MEMORY2=400M` respectively. You can read more about LS-Dyna memory settings [here](https://www.d3view.com/a-few-words-on-memory-settings-in-ls-dyna/).
 
+## Step 5: Running LS-Dyna
+
+Next we'll submit the script with `sbatch submit.sh`:
+
+```bash
+$ sbatch submit.sh
+Submitted batch job 1
+```
+
+You'll then see the job go into `CF` state for 2 minutes, before going into running `R` state:
+
+```bash
+$ squeue
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+                 1    queue0 submit.s ec2-user CF       0:01      4 queue0-dy-queue0-hpc6a48xlarge-[1-4]
+$ watch squeue
+```
+
+Once the job is running we can ssh into one of the compute nodes like so:
+
+```bash
+$ ssh queue0-dy-queue0-hpc6a48xlarge-1
+```
+
+Once there, install and run htop to monitor CPU and memory utilization:
+
+```bash
+$ sudo yum install -y htop && htop
+```
+
+![HTOP](/img/gromacs/htop.png)
+
 # Appendix
 
 ## AWS ParallelCluster Config file
