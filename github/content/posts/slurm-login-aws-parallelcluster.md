@@ -17,7 +17,7 @@ To seperate the Slurm Scheduler instance from the login node, you can launch a s
 
 2. Now edit the Security Group to allow mounting NFS
 
-3. SSH into this instance and Mount NFS
+3. SSH into this instance and Mount NFS from the HeadNode (where `172.31.19.195` is the HeadNode ip).
 
 ```bash
 mkdir -p /opt/slurm
