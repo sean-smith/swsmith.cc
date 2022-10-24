@@ -196,7 +196,7 @@ Once there, install and run htop to monitor CPU and memory utilization:
 $ sudo yum install -y htop && htop
 ```
 
-![HTOP](/img/gromacs/htop.png)
+![HTOP](/img/ls-dyna/htop.png)
 
 # Appendix
 
