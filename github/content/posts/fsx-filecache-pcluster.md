@@ -1,3 +1,4 @@
+
 ---
 title: Setup FSx FileCache with AWS ParallelCluster
 description:
@@ -112,7 +113,7 @@ Like FSx Lustre, FileCache has the notion of Data Repository Associations (DRA).
     exit 0
     else
     # create a directory
-    mkdir -p ${MOUNT_DIR}
+    sudo mkdir -p ${MOUNT_DIR}
 
     # mount on compute node
     sudo mount -t lustre -o relatime,flock ${FSX_DNS} ${MOUNT_DIR}
