@@ -1,5 +1,5 @@
 ---
-title: Multi-AZ AWS ParallelCluster
+title: Multi-AZ AWS ParallelCluster 🌎
 description:
 date: 2022-11-02
 tldr: Setup Slurm Queues in different Availibility Zones to unlock additional capacity.
@@ -18,8 +18,8 @@ With this feature, we can setup a **single AZ-per queue** essentially allowing u
 
 This is a beta launch and has some caveats:
 
-* Clusters that create an FSx Lustre filesystem will throw an error about Multi-Subnets. The solution here is to [create a filesystem then create the cluster](fsx-persistent-2-pcluster.html) and attach it.
-* Traffic between different Availibility Zones will incur a small charge of $.01/GB, this is documented [here](https://aws.amazon.com/ec2/pricing/on-demand/#Data_Transfer_within_the_same_AWS_Region).
+* Clusters that create an FSx Lustre filesystem will throw an error about Multi-Subnets. The solution here is to [create a filesystem](fsx-persistent-2-pcluster.html) then create the cluster and attach it.
+* Traffic between different Availibility Zones will incur a small charge of $.01/GB, which I explore [below](#cost-).
 
 ## Setup
 
@@ -49,7 +49,7 @@ This is a beta launch and has some caveats:
     Scheduling:
     Scheduler: slurm
     SlurmQueues:
-        - Name: queue0
+        - Name: us-east-2b
         ComputeResources:
             - Name: queue0-hpc6a48xlarge
             MinCount: 0
@@ -67,7 +67,7 @@ This is a beta launch and has some caveats:
             LocalStorage:
             RootVolume:
                 VolumeType: gp3
-        - Name: queue1
+        - Name: us-east-2c
         ComputeResources:
             - Name: queue1-c6i32xlarge
             MinCount: 0
@@ -99,3 +99,38 @@ This is a beta launch and has some caveats:
     ```bash
     pcluster create-cluster -n multi-az -c config-multi-az.yaml --suppress-validators type:SingleSubnetValidator
     ```
+
+## Performance 🏎
+
+To test performance I installed [ior](https://www.hpcworkshops.com/06-fsx-for-lustre/09-performance-test.html), a tool to test filesystem performance.
+
+### us-east-2b
+
+This is the control case, FSx Lustre is co-located in **us-east-2b**.
+
+```bash
+Max Write: 665.86 MiB/sec (698.21 MB/sec)
+Max Read:  19250.96 MiB/sec (20186.10 MB/sec)
+```
+
+### us-east-2c
+
+This is the real case.
+
+```bash
+Max Write: 732.34 MiB/sec (767.91 MB/sec)
+Max Read:  48277.58 MiB/sec (50622.71 MB/sec)
+```
+
+## Cost 💰
+
+Traffic between different Availibility Zones incurs a small charge of $.01/GB as documented [here](https://aws.amazon.com/ec2/pricing/on-demand/#Data_Transfer_within_the_same_AWS_Region). That seems minimal but how do we measure it on a real cluster?
+
+To measure this, I went to the cost explorer console and filtered by the inter-AZ charges for that specific cluster.
+
+1. Go to the [Cost Explorer Console](https://console.aws.amazon.com/cost-management/home?#/cost-explorer?)
+2. Group by **Service**
+3. Add a secondary filter **EC2: Data Transfer - Inter AZ**
+4. You can then filter down by a specific cluster, select **Tag** then **parallelcluster:cluster_name** then select the cluster you're interested in. See [Cost Explorer with AWS ParallelCluster](cost-explorer-pcluster.html).
+
+![Inter-AZ Data Transfer Cost](/img/multi-az/cost.png)

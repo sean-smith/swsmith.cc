@@ -1,5 +1,5 @@
 ---
-title: LS-Dyna with AWS ParallelCluster
+title: LS-Dyna with AWS ParallelCluster 🚗
 description:
 date: 2022-10-19
 tldr: Setup LS-Dyna with AWS ParallelCluster

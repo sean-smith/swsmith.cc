@@ -1,5 +1,5 @@
 ---
-title: Enable All-or-Nothing Scaling with AWS ParallelCluster
+title: Enable All-or-Nothing Scaling with AWS ParallelCluster 🖥
 description:
 date: 2022-06-21
 tldr: Launch N instances or none at all

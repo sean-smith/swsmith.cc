@@ -1,5 +1,5 @@
 ---
-title: Setup Gromacs On AWS ParallelCluster
+title: Setup Gromacs On AWS ParallelCluster 🧬
 description:
 date: 2022-08-16
 tldr: Setup Gromacs with Spack on AWS ParallelCluster

@@ -1,6 +1,5 @@
-
 ---
-title: Setup FSx FileCache with AWS ParallelCluster
+title: Setup FSx FileCache with AWS ParallelCluster 🗂
 description:
 date: 2022-10-24
 tldr: access on-prem files easily from AWS ParallelCluster with FSx File Cache
