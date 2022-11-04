@@ -109,18 +109,25 @@ To test performance I installed [ior](https://www.hpcworkshops.com/06-fsx-for-lu
 This is the control case, FSx Lustre is co-located in **us-east-2b**.
 
 ```bash
-Max Write: 665.86 MiB/sec (698.21 MB/sec)
-Max Read:  19250.96 MiB/sec (20186.10 MB/sec)
+Max Write: 694.41 MiB/sec
+Max Read:  38430.23 MiB/sec
 ```
 
 ### us-east-2c
 
-This is the real case.
+```bash
+Max Write: 708.09 MiB/sec
+Max Read:  49131.06 MiB/sec
+```
+
+### us-east-2a
 
 ```bash
-Max Write: 732.34 MiB/sec (767.91 MB/sec)
-Max Read:  48277.58 MiB/sec (50622.71 MB/sec)
+Max Write: 670.88 MiB/sec
+Max Read:  37749.35 MiB/sec
 ```
+
+As you can see, there's a negible difference in performance. In other words performance is [norminal](https://www.urbandictionary.com/define.php?term=Norminal) 👌.
 
 ## Cost 💰
 
