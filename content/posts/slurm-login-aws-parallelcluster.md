@@ -1,5 +1,5 @@
 ---
-title: Slurm Login Node with AWS ParallelCluster
+title: Slurm Login Node with AWS ParallelCluster 🖥
 description:
 date: 2021-12-07
 tldr: Create a seperate Slurm login node with AWS ParallelCluster

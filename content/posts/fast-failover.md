@@ -3,7 +3,7 @@ title: Fast Instance Failover for Tightly-Coupled Jobs
 description:
 date: 2022-07-11
 tldr: Retry Slurm jobs quickly with the same number of cores per-instance in AWS ParallelCluster
-draft: false
+draft: true
 tags: [aws parallelcluster, mpi, slurm, aws]
 ---
 
@@ -25,7 +25,7 @@ I know that the `c6i.32xlarge`, `m6i.32xlarge`, and `r6i.32xlarge` all share the
 | m6i.32xlarge  | 3rd Generation Intel Xeon (Ice lake) | 128   | 512         | $6.144         |
 | r6i.32xlarge  | 3rd Generation Intel Xeon (Ice lake) | 128   | 1024        | $8.064         |
 
-With this knowledge and the new [**Fast Instance Failover**](https://gist.github.com/sean-smith/4e6507e9f302c61d8954fd9923f994d9#how-to-test-fast-insufficient-capacity-fail-over) feature released in AWS ParallelCluster `3.2.0`, I can re-try on the `m6i` and `r6i` in quick succession until I get the 50 instances my job requires.
+With this knowledge and the new [**Fast Instance Failover**](https://docs.aws.amazon.com/parallelcluster/latest/ug/slurm-short-capacity-fail-mode-v3.html) feature released in AWS ParallelCluster `3.2.0`, I can re-try on the `m6i` and `r6i` in quick succession until I get the 50 instances my job requires.
 
 I order the instances in the queue from least to greatest cost to ensure I get the cheapest instance type that meets my capacity requirements. This isn't just limited to 6th generation Intel instances, you can do do this with any set of instances that have the same dimension i.e. vCPU count.
 
@@ -100,6 +100,8 @@ Then I can submit a job like:
 ```bash
 sbatch --wrap "sleep 60" -N 50 --requeue
 ```
+
+**Note:** The `--requeue` flag is only needed when using All-Or-Nothing scaling in combination with fast failover. If you're just using fast failover no need to specify `--requeue`.
 
 Since I have [all-or-nothing](/posts/all-or-nothing.html) scaling setup my job gets rejected from the first set of instances:
 
