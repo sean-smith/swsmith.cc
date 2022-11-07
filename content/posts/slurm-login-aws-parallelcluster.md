@@ -3,7 +3,7 @@ title: Slurm Login Node with AWS ParallelCluster
 description:
 date: 2021-12-07
 tldr: Create a seperate Slurm login node with AWS ParallelCluster
-draft: true
+draft: false
 og_image: /img/slurm-login/ec2-clone.png
 tags: [ec2, aws parallelcluster, hpc, aws, slurm]
 ---
