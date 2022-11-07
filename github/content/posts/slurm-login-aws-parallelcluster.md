@@ -3,17 +3,16 @@ title: Slurm Login Node with AWS ParallelCluster
 description:
 date: 2021-12-07
 tldr: Create a seperate Slurm login node with AWS ParallelCluster
-draft: false
+draft: true
+og_image: /img/slurm-login/ec2-clone.png
 tags: [ec2, aws parallelcluster, hpc, aws, slurm]
 ---
 
-# Slurm Login Node with AWS ParallelCluster
-
-To seperate the Slurm Scheduler instance from the login node, you can launch a seperate instance and connect it to the cluster. This ensures seperating between what the users might do on the login node and the vital scheduler process. 
+To seperate the Slurm Scheduler instance from the login node, you can launch a seperate instance and connect it to the cluster. This ensures seperating between what the users might do on the login node and the vital scheduler process.
 
 1. Launch a new EC2 Instance based on the AWS ParallelCluster AMI, an easy way to do this is to go to the [EC2 Console](https://console.aws.amazon.com/ec2/v2/home), select the head node and click Actions > Image and Templates > "Launch more like this":
 
-![image](https://user-images.githubusercontent.com/5545980/145072364-c225aa4d-e697-4dce-8312-8b110eaba0c4.png)
+![Slurm Login Node](/img/slurm-login/ec2-clone.png)
 
 2. Now edit the Security Group to allow mounting NFS
 
@@ -73,7 +72,7 @@ EOF
 
 Now start the service:
 
-```
+```bash
 sudo systemctl enable slurmd.service
 sudo systemctl start slurmd.service
 ```
