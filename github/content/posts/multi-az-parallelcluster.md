@@ -10,16 +10,19 @@ tags: [aws parallelcluster, slurm, aws]
 
 ![Multi-AZ Architecture](/img/multi-az/architecture.png)
 
-Today we launched a new version of AWS ParalleCluster, [version 3.3.0](https://aws.amazon.com/about-aws/whats-new/2022/11/aws-parallelcluster-3-3-multiple-instance-type-allocation-top-features/). This version has a feature hidden in the [release log](https://github.com/aws/aws-parallelcluster/blob/develop/CHANGELOG.md#330):
+Today we launched a new version of AWS ParalleCluster, [version 3.3.0](https://aws.amazon.com/about-aws/whats-new/2022/11/aws-parallelcluster-3-3-multiple-instance-type-allocation-top-features/). This version has a beta feature hidden in the [release log](https://github.com/aws/aws-parallelcluster/blob/develop/CHANGELOG.md#330):
 
 * Allow for suppressing the `SingleSubnetValidator` for Queues.
 
 With this feature, we can setup a **single AZ-per queue** essentially allowing us to choose which Availibility Zone is associated with each queue. This is useful for capacity constrained instances, such as GPU and HPC instances which may exist in different availibility zones.
 
+> Note: This is a **beta feature** and as such will incur additional costs, such as cross-AZ traffic. For example, the home directory `/home` and the `/opt/slurm` directory are served from the HeadNode, so any traffic from the HeadNode to the compute that's in another AZ will incur a charge of $.01/GB **in each direction**, which I explore [below](#cost-). Use at your own risk.
+
 This is a beta launch and has some caveats:
 
 * Clusters that create an FSx Lustre filesystem will throw an error about Multi-Subnets. The solution here is to [create a filesystem](fsx-persistent-2-pcluster.html) then create the cluster and attach it.
-* Traffic between different Availibility Zones will incur a small charge of $.01/GB, which I explore [below](#cost-).
+* Traffic between different Availibility Zones will incur a charge of $.01/GB in each direction, which I explore [below](#cost-).
+* Directories exported from the HeadNode, which include `/home`, `/opt/slurm`, `/opt/parallelcluster/shared`, and `/opt/intel` are hosted in the same AZ as the HeadNode.
 
 ## Setup
 
