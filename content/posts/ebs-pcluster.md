@@ -104,52 +104,52 @@ Let's say you want to use a an instance type that doesn't have NVME but you want
 
     The config will look something like:
 
-```yaml
-HeadNode:
-InstanceType: t3.micro
-Ssh:
-    KeyName: amzn2
-Networking:
-    SubnetId: subnet-8b15a7c6
-LocalStorage:
-    RootVolume:
-    VolumeType: gp3
-Iam:
-    AdditionalIamPolicies:
-    - Policy: arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
-    - Policy: arn:aws:iam::aws:policy/AmazonEC2FullAccess
-    - Policy: arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
-Scheduling:
-Scheduler: slurm
-SlurmQueues:
-    - Name: queue0
-    ComputeResources:
-        - Name: queue0-t32xlarge
-        MinCount: 0
-        MaxCount: 4
-        InstanceType: t3.2xlarge
+    ```yaml
+    HeadNode:
+    InstanceType: t3.micro
+    Ssh:
+        KeyName: amzn2
     Networking:
-        SubnetIds:
-        - subnet-8b15a7c6
-    ComputeSettings:
-        LocalStorage:
+        SubnetId: subnet-8b15a7c6
+    LocalStorage:
         RootVolume:
-            VolumeType: gp3
-    CustomActions:
-        OnNodeConfigured:
-        Script: s3://spack-swsmith/attach_ebs.sh
-        Args:
-            - /scratch
-            - gp3
-            - '100'
+        VolumeType: gp3
     Iam:
         AdditionalIamPolicies:
+        - Policy: arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
         - Policy: arn:aws:iam::aws:policy/AmazonEC2FullAccess
         - Policy: arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
-Region: us-east-2
-Image:
-Os: alinux2
-```
+    Scheduling:
+    Scheduler: slurm
+    SlurmQueues:
+        - Name: queue0
+        ComputeResources:
+            - Name: queue0-t32xlarge
+            MinCount: 0
+            MaxCount: 4
+            InstanceType: t3.2xlarge
+        Networking:
+            SubnetIds:
+            - subnet-8b15a7c6
+        ComputeSettings:
+            LocalStorage:
+            RootVolume:
+                VolumeType: gp3
+        CustomActions:
+            OnNodeConfigured:
+            Script: s3://spack-swsmith/attach_ebs.sh
+            Args:
+                - /scratch
+                - gp3
+                - '100'
+        Iam:
+            AdditionalIamPolicies:
+            - Policy: arn:aws:iam::aws:policy/AmazonEC2FullAccess
+            - Policy: arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+    Region: us-east-2
+    Image:
+    Os: alinux2
+    ```
 
 ## Test
 
@@ -187,12 +187,13 @@ If the instance fails to create, you can debug it by looking at the `/var/log/cl
 An error occurred (UnauthorizedOperation) when calling the CreateVolume operation: You are not authorized to perform this operation. Encoded authorization failure message: zzdHSckogz8k6Y7...
 ```
 * Specify the wrong device name, such as when using older i.e. t2 or c4 instances. These instances have an older block device mapping, and `/dev/sdf` will not work. You can read more about it [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/device_naming.html)
+* Specify a duplicate device name. If you attempt to attach a secondary Amazon EBS volume to `/dev/sdf`, the secondary EBS volume can't successfully attach to the instance. This can cause the EBS volume to be stuck in the attaching state. See [EBS Stuck attaching](https://aws.amazon.com/premiumsupport/knowledge-center/ebs-stuck-attaching/)
 
 To debug faster, I suggest runnning on the HeadNode like so:
 
 ```bash
 # download from s3
-aws s3 cp s3://your-bucket/attach_ebs.sh .
+wget https://swsmith.cc/scripts/attach_ebs.sh
 # run as root
 sudo bash attach_ebs.sh
 ```
