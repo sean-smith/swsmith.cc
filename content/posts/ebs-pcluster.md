@@ -33,13 +33,17 @@ Let's say you want to use a an instance type that doesn't have NVME but you want
     #   attach_ebs.sh /scratch gp2|gp3|io1|io2 100 /dev/xvdb
     #
     #   1. Create a EBS volume
-    #   2. Wait for it to become availible
-    #   3. Mount it
-    #   4. Format filesystem
+    #   2. wait for volume to create
+    #   3. attach volume
+    #   4. wait for volume to attach
+    #   5. format filesystem
+    #   6. mount filesystem
+    #   7. persist volume after reboots
 
     mount_point="${1:-/scratch}"
     type="${2:-gp3}"
     size="${3:-100}"
+    device=${4:-/dev/sdf}
 
     az=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
     region=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
@@ -58,19 +62,35 @@ Let's say you want to use a an instance type that doesn't have NVME but you want
 
     # 3. attach volume
     aws ec2 --region $region attach-volume \
-        --device /dev/sdf \
+        --device ${device} \
         --instance-id ${instance_id} \
         --volume-id ${volume_id}
 
-    # 4. format filesystem
-    mkfs -t ext4 /dev/xvdf
+    # 4. wait until volume is attached
+    DEVICE_STATE="unknown"
+    until [ "${DEVICE_STATE}" == "attached" ]; do
+        DEVICE_STATE=$(aws ec2 describe-volumes \
+        --region ${region} \
+        --filters \
+            Name=attachment.instance-id,Values=${instance_id} \
+            Name=attachment.device,Values=${device} \
+        --query Volumes[].Attachments[].State \
+        --output text)
+        sleep 5
+    done
 
-    # 5. mount filesystem
+    # 5. format filesystem
+    mkfs -t xfs ${device}
+
+    # 6. mount filesystem
     mkdir -p ${mount_point}
-    mount /dev/xvdf ${mount_point}
+    mount ${device} ${mount_point}
+
+    # 7. Persist Volume after reboots by putting it into /etc/fstab
+    echo "${device} ${mount_point} xfs defaults,nofail 0 2" >> /etc/fstab
     ```
 
-2. Upload it to an S3 bucket
+2. Upload it to an S3 bucket. For your convenience, I've also hosted the script at `https://swsmith.cc/scripts/attach_ebs.sh`.
 
     ```bash
     aws s3 cp attach_ebs.sh s3://bucket/
