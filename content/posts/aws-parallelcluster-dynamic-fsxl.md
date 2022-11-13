@@ -82,6 +82,7 @@ Next create a slurm submission script to mount and execute your job:
 
 ```bash
 #!/bin/bash
+#SBATCH -N [num hosts]
 
 PROJECT_NAME=$1
 source /opt/parallelcluster/$PROJECT_NAME
@@ -90,11 +91,12 @@ source /opt/parallelcluster/$PROJECT_NAME
 filesystem_dns=$(aws fsx --region $REGION describe-file-systems --file-system-ids $filesystem_id --query "FileSystems[0].DNSName" --output text)
 filesystem_mountname=$(aws fsx --region $REGION describe-file-systems --file-system-ids $filesystem_id --query "FileSystems[0].MountName" --output text)
 
-# create mount dir
-mkdir -p /fsx/$PROJECT_NAME
+module load openmpi
+# create mount dir (once on each node)
+mpirun -np $SLURM_JOB_NUM_NODES --map-by ppr:1:node mkdir -p /fsx/$PROJECT_NAME
 
-# mount filesystem
-sudo mount -t lustre -o noatime,flock $filesystem_dns@tcp:/$filesystem_mountname /fsx/$PROJECT_NAME
+# mount filesystem (once on each node)
+mpirun -np $SLURM_JOB_NUM_NODES --map-by ppr:1:node sudo mount -t lustre -o noatime,flock $filesystem_dns@tcp:/$filesystem_mountname /fsx/$PROJECT_NAME
 
 # Run your job
 # ...
