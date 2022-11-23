@@ -10,4 +10,4 @@ I'm a Solution Architect at [AWS](https://aws.amazon.com/hpc/) working High Perf
 
 In my free time I'm a pilot and Flight Instructor (CFI, CFII). Learn to [fly with me!](https://www.youtube.com/watch?v=qCqnzM-LuqA&t=1s) ✈️
 
-Checkout my [resume](SeanSmith.pdf)
+In 2022 I flew to all 50 US States to raise money for non-profit Angel Flight. Checkout the adventure [@ The Fifty Project](https://thefiftyproject.com/).

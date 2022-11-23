@@ -1,0 +1,121 @@
+% This file uses the resume document class (res.cls)
+
+\documentclass{res} 
+\usepackage{hyperref}
+\usepackage[tmargin=.25in, lmargin=.25in, rmargin=.6in]{geometry}
+\setlength{\textheight}{10in} % increase text height to fit on 1-page 
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=*}
+
+\begin{document}
+\name{Sean Smith\\
+seanwssmith@gmail.com\\
+{\centering 
+\url{swsmith.cc}}\\
+650-315-8040\\
+[12pt]}     % the \\[12pt] adds a blank
+				        % line after name                                  
+\begin{resume}
+    
+\section{EDUCATION}          
+    Boston University, Boston, MA  \\        
+    Bachelor of Arts, Computer Science 2017 \\
+    Masters of Science, Computer Science 2017  \\       
+    Combined BA/MS Program, completed in 4 years \\
+    Graduation Speaker, CS Department
+    
+\section{EXPERIENCE}
+%%%%%%%%%%%%%%
+\vspace{-0.10in}
+ \begin{tabbing}
+   \hspace{2.5in}\= \hspace{2.6in}\= \kill % set up two tab positions
+    {\bf Sr. HPC Solution Architect} \>Amazon     \>April 2022-Present\\
+                             \>Seattle, WA
+   \end{tabbing}\vspace{-10pt}      % suppress blank line after tabbing
+   \begin{itemize}
+   \setlength\itemsep{0em}
+\item Built out \href{https://pcluster.cloud/}{ParallelCluster Manager}, a web UI for AWS ParallelCluster
+\item Gave a talk at re:Invent, \href{https://swsmith.cc/slides/CMP208-CFD-in-Cloud.pdf}{The Future of Computational Fluid Dynamics}
+\item Initiated and developed strategic customer relationship that resulted in \$5M contract
+    \end{itemize}
+%%%%%%%%%%%%%%
+\vspace{-0.10in}
+ \begin{tabbing}
+   \hspace{2.5in}\= \hspace{2.6in}\= \kill % set up two tab positions
+    {\bf HPC Solution Architect} \>Amazon     \>April 2020-April 2022\\
+                             \>Seattle, WA
+   \end{tabbing}\vspace{-10pt}      % suppress blank line after tabbing
+   \begin{itemize}
+   \setlength\itemsep{0em}
+\item Built \href{https://github.com/aws-samples/no-tears-cluster}{No-Tears-Cluster}, then followed on with \href{https://cluster-creator.swsmith.cc/}{Cluster Creator}
+    \end{itemize}
+%%%%%%%%%%%%%%
+\vspace{-0.10in}
+ \begin{tabbing}
+   \hspace{2.5in}\= \hspace{2.6in}\= \kill % set up two tab positions
+    {\bf Software Development Engineer II} \>Amazon     \>November 2018-April 2020\\
+                             \>Seattle, WA
+   \end{tabbing}\vspace{-10pt}      % suppress blank line after tabbing
+   \begin{itemize}
+   \setlength\itemsep{0em}
+\item Built \href{https://github.com/aws/aws-parallelcluster}{AWS ParallelCluster} from scratch and launched at SuperComputing 2019
+    \end{itemize}
+%%%%%%%%%%%%%%
+\vspace{-0.10in}
+ \begin{tabbing}
+   \hspace{2.5in}\= \hspace{2.6in}\= \kill % set up two tab positions
+    {\bf Software Development Engineer} \>Amazon     \>September 2017-November 2018\\
+                             \>Seattle, WA
+   \end{tabbing}\vspace{-10pt}      % suppress blank line after tabbing
+   \begin{itemize}
+   \setlength\itemsep{0em}
+\item Wrote core scheduling logic for AWS Batch in Java
+    \end{itemize}
+%%%%%%%%%%%%%%
+\vspace{-0.15in}
+ \begin{tabbing}
+   \hspace{2.5in}\= \hspace{2.6in}\= \kill % set up two tab positions
+    {\bf Internships} \>     \>June 2014-August 2016
+   \end{tabbing}\vspace{-10pt}      % suppress blank line after tabbing
+   \begin{itemize}
+   \setlength\itemsep{0em}
+   \item Amazon, Summer 2016
+   \item AthenaHealth, Summer 2015
+   \item ActivePrime, Summer 2014
+    \end{itemize}
+%%%%%%%%%%%%%%
+\section{TECHNICAL SKILLS}          
+    Main languages: Python, Java, C, Javascript \\         
+    Skills: AWS, Linux, HPC, Containers
+%%%%%%%%%%%
+\vspace{-0.10in}
+\section{BOSTON UNIVERSITY}    
+	\begin{itemize}
+   	\setlength\itemsep{0em}
+        \item President of the on-campus makerspace \href{http://builds.cc}{BUILDS}
+        \item Course Assistant for CS 112 (Data Structures and Algorithms), CS 210 (Computer Systems)
+        \item Teaching Assistant for CS 558 (Network Security)
+        \item Made top 16 world-wide and traveled to China to compete in ASC
+        \item Made top 12 and traveled to Germany to compete in the International Super Computing Competition (ISC)
+        \item Won 3rd in NSEC CTF
+        \end{itemize}
+%%%%%%%%%%%
+\vspace{-0.10in}
+\section{PERSONAL PROJECTS}    
+	\begin{itemize}
+   	\setlength\itemsep{0em}   
+         \item \href{https://thefiftyproject.com/}{The Fifty Project}: In September 2022, my Fiance and I set out to fly our Mooney to all 50 US States in order to raise money for Angel Flight
+  		 \item Published Paper in Passive and Active Measuring Conference 2018: \href{https://www.cs.huji.ac.il/~yossigi/pam18.pdf}{The Unintended Consequences of Email Spam Prevention}
+         \item \href{https://www.kickstarter.com/projects/bdommie/sea-rover}{Sea Rover}: A 14-foot autonomous boat build to navigate the ocean. Completed open ocean testing successfully June 2016
+    		\end{itemize}
+%%%%%%%%%%%
+\vspace{-0.10in}
+    \section{ADDITIONAL INFORMATION} 
+    	\begin{itemize}
+	\setlength\itemsep{0em}
+  		\item Eagle Scout  
+  		\item Commercial Pilot, ASEL, ASES, TW, CFI, CFII
+	\end{itemize}           
+ 
+\end{resume}
+\end{document}
