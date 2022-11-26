@@ -1,7 +1,7 @@
 ---
 title: Slurm Login Node with AWS ParallelCluster 🖥
 description:
-date: 2021-12-07
+date: 2022-11-10
 tldr: Create a seperate Slurm login node with AWS ParallelCluster
 draft: false
 og_image: /img/slurm-login/architecture.png
@@ -18,7 +18,11 @@ To seperate the Slurm Scheduler instance from the login node, you can launch a s
 
     ![Slurm Login Node](/img/slurm-login/ec2-clone.png)
 
-2. Now edit the Security Group to allow mounting NFS
+2. Now edit the Security Group of the old HeadNode to allow traffic from the Login Node. Add a route for all traffic with the source `[cluster_name]-HeadNodeSecurityGroup`.
+
+    | Type        | Source                               | Description               |
+    |-------------|--------------------------------------|---------------------------|
+    | All Traffic | `[cluster-name]-HeadNodeSecurityGroup` | Allow traffic to HeadNode |
 
 3. SSH into this instance and Mount NFS from the HeadNode (where `172.31.19.195` is the HeadNode ip).
 
@@ -28,7 +32,7 @@ To seperate the Slurm Scheduler instance from the login node, you can launch a s
     sudo mount -t nfs 172.31.19.195:/home /home
     ```
 
-4. Setup [Munge Key](https://slurm.schedmd.com/quickstart_admin.html#communication) to authenticate with the head node.
+4. Setup [Munge Key](https://slurm.schedmd.com/quickstart_admin.html#communication) to authenticate with the head node:
 
     ```bash
     sudo su
@@ -82,3 +86,36 @@ sudo systemctl start slurmd.service
 ```
 
 Now we can submit jobs and see the partitions!
+
+## Packer 📦
+
+1. First install [packer](https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli), on mac / linux you can use `brew`:
+
+    ```bash
+    brew install packer
+    ```
+
+2. Download the files [pc-login-node.json](https://swsmith.cc/scripts/pc-login-node.json) and [login-node.sh](https://swsmith.cc/scripts/login-node.sh):
+
+    ```bash
+    wget https://swsmith.cc/scripts/login-node.sh
+    wget https://swsmith.cc/scripts/pc-login-node.json
+    ```
+
+3. Run the bach script `login-node.sh` and input your **cluster's name** when prompted. This will generate a file `variables.json` with all the relevant cluster information:
+
+    ```bash
+    bash login-node.sh 
+    ```
+
+4. Run Packer:
+
+    ```bash
+    packer build -color=true -var-file variables.json pc-login-node.json
+    ```
+
+5. That'll produce an AMI that we can launch in the same AZ as the HeadNode:
+
+    ```bash
+    bash launch-loginnode.sh 
+    ```

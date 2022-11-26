@@ -1,0 +1,142 @@
+{
+  "min_packer_version": "1.6.0",
+  "variables": {
+    "parallel_cluster_version": "3.3.0"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "{{user `aws_region`}}",
+      "subnet_id": "{{ user `subnet_id`}}",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "aws-parallelcluster-{{user `parallel_cluster_version`}}-amzn2-*",
+          "architecture": "x86_64",
+          "root-device-type": "ebs"
+        },
+        "owners": [
+          "amazon"
+        ],
+        "most_recent": true
+      },
+      "instance_type": "{{user `instance_type`}}",
+      "ssh_username": "ec2-user",
+      "ami_name": "{{user `cluster_name`}}-login-node-parallelcluster-{{ user `parallel_cluster_version`}}-amzn2-{{isotime \"20060102150405\" | clean_resource_name}}",
+      "shutdown_behavior": "terminate",
+      "associate_public_ip_address": "{{user `public_ip`}}",
+      "encrypt_boot": "{{user `encrypt_boot`}}",
+      "tags": {
+          "Name": "{{user `cluster_name`}}-login-node-parallelcluster-{{ user `parallel_cluster_version`}}-amzn2",
+          "State": "{{user `state`}}",
+          "Env": "{{user `env`}}",
+          "OS": "Amazon Linux 2",
+          "Source_AMI": "{{ .SourceAMI }}",
+          "parallelcluster:version": "{{ user `parallel_cluster_version`}}",
+          "parallelcluster:build_status": "available",
+          "parallelcluster:os": "alinux2"
+      },
+      "ssh_interface": "{{user `ssh_interface`}}",
+      "communicator": "ssh",
+      "launch_block_device_mappings": [
+        {
+          "delete_on_termination": true,
+          "device_name": "/dev/xvda",
+          "volume_size": 100,
+          "throughput": 1000,
+          "iops": 10000,
+          "volume_type": "gp3"
+        }
+      ],
+      "temporary_iam_instance_profile_policy_document": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "ssm:DescribeAssociation",
+              "ssm:GetDeployablePatchSnapshotForInstance",
+              "ssm:GetDocument",
+              "ssm:DescribeDocument",
+              "ssm:GetManifest",
+              "ssm:GetParameter",
+              "ssm:GetParameters",
+              "ssm:ListAssociations",
+              "ssm:ListInstanceAssociations",
+              "ssm:PutInventory",
+              "ssm:PutComplianceItems",
+              "ssm:PutConfigurePackageResult",
+              "ssm:UpdateAssociationStatus",
+              "ssm:UpdateInstanceAssociationStatus",
+              "ssm:UpdateInstanceInformation"
+            ],
+            "Resource": "*"
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "ssmmessages:CreateControlChannel",
+              "ssmmessages:CreateDataChannel",
+              "ssmmessages:OpenControlChannel",
+              "ssmmessages:OpenDataChannel"
+            ],
+            "Resource": "*"
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "ec2messages:AcknowledgeMessage",
+              "ec2messages:DeleteMessage",
+              "ec2messages:FailMessage",
+              "ec2messages:GetEndpoint",
+              "ec2messages:GetMessages",
+              "ec2messages:SendReply"
+            ],
+            "Resource": "*"
+          }
+        ]
+      },
+      "pause_before_ssm": "30s"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "expect_disconnect": true,
+      "inline": [
+        "sudo systemctl stop supervisord",
+        "sudo systemctl disable supervisord",
+        "sudo rm -rf /opt/slurm",
+        "sudo rm -f /etc/systemd/system/slurmdbd.service",
+        "sudo rm -f /etc/systemd/system/slurmctld.service"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo mkdir -p /opt/slurm",
+        "sudo mkdir -p /opt/df",
+        "echo '{{user `head_node_ip`}}:/opt/slurm /opt/slurm nfs hard,_netdev,noatime 0 2' | sudo tee -a /etc/fstab",
+        "echo '{{user `head_node_ip`}}:/home /home nfs hard,_netdev,noatime 0 2' | sudo tee -a /etc/fstab",
+        "sudo mount -a"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo cp /home/ec2-user/.munge/.munge.key /etc/munge/munge.key",
+        "sudo chown munge:munge /etc/munge/munge.key",
+        "sudo chmod 0600 /etc/munge/munge.key",
+        "sudo systemctl enable munge",
+        "sudo systemctl start munge"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "echo 'export SLURM_HOME=/opt/slurm' | sudo tee -a /etc/profile.d/login-node.sh",
+        "echo 'export PATH=$SLURM_HOME/bin:$PATH' | sudo tee -a /etc/profile.d/login-node.sh"
+      ]
+    }
+  ]
+}
