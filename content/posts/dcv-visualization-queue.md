@@ -1,11 +1,13 @@
 ---
 title: DCV Visualization Queue
 description:
-date: 2021-11-30
-tldr: Create DCV Instances in their own queue with AWS ParallelCluster.
+date: 2022-11-29
+tldr: Launch Graphic Desktops with AWS ParallelCluster. This allows you to run applications such as StarCCM+, shown below, without moving data.
 draft: false
 tags: [dcv, aws parallelcluster, hpc, aws, slurm, starccm+]
 ---
+
+![StarCCM+ Visualization](/img/dcv-visualization-queue/starccm.png)
 
 # DCV Visualization Queue
 
@@ -23,7 +25,7 @@ A common ask is to run DCV sessions on a compute queue instead of the head node.
 * **Name:** DCV
 * Add an Ingress rule, `Custom TCP`, `Port 8443`, `0.0.0.0/0`
 
-![image](https://user-images.githubusercontent.com/5545980/141414480-1a77e823-71b9-4374-9533-b73da4b1c313.png)
+![Security Group](/img/dcv-visualization-queue/security-group.png)
 
 2. Create a cluster with a queue `dcv` with instance type `g4dn.xlarge`.
 
@@ -99,13 +101,16 @@ sbatch desktop.sbatch # note the job id
 
 5. Once the job starts running, check the file `cat desktop-[job-id].out` for connection details:
 
-![image](https://user-images.githubusercontent.com/5545980/141433503-a87b8f20-bd1c-438b-bb3e-eb34d9a5ba32.png)
+![DCV URL](/img/dcv-visualization-queue/dcv-url.png)
 
 ## No-Ingress DCV
 
 An alternative to the above approach where we opened up the Security Group to allow traffic from port `8443` is to create a Port Forwarding Session with AWS SSM. This allows us to lock down the Security Group and have no ingress.
+
 1. Install [Session Manager Plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html)
+
 2. Submit a job using the following submit script:
+
 ```bash
 #!/bin/bash
 #SBATCH -p desktop
@@ -133,14 +138,77 @@ while true; do
    sleep 1
 done;
 ```
+
 3. Run the output port forwarding command locally:
 
-![image](https://user-images.githubusercontent.com/5545980/141438701-11b67fb2-ff59-431c-a408-70456c5d1cbe.png)
+![Start SSM Session](/img/dcv-visualization-queue/ssm-start-session.png)
 
 4. Connect to the URL!
+
+## DCV Client
+
+DCV provides a native client for MacOS, Windows and Linux. The client provides a better experience than the web client as it's allowed to use more of the hardware without the browser limiting it.
+
+![DCV Client](/img/dcv-visualization-queue/dcv-client.png)
+
+1. Download the client [here](https://download.nice-dcv.com/).
+1. Next create a file a file `desktop.sbatch` with the following content:
+2. Change the line `bucket='your-bucket'` to point to a S3 bucket you own.
+3. Add permissions to your cluster to access this bucket.
+
+```bash
+#!/bin/bash
+#SBATCH -p dcv
+#SBATCH -t 12:00:00
+#SBATCH -J desktop
+#SBATCH -o "%x-%j.out"
+
+# magic command to disable lock screen
+dbus-launch gsettings set org.gnome.desktop.session idle-delay 0 > /dev/null
+# Set a password
+password=$(openssl rand -base64 32)
+echo $password | sudo passwd $USER --stdin > /dev/null
+# start DCV server and create session
+sudo systemctl start dcvserver
+dcv create-session $SLURM_JOBID
+
+# params
+ip=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+port=8443
+bucket='your-bucket'
+
+cat <<EOT > connect-$SLURM_JOB_ID.dcv
+[version]
+format=1.0
+
+[connect]
+host=$ip
+port=$port
+user=$USER
+password=$password
+sessionid=$SLURM_JOB_ID
+EOT
+
+aws s3 cp connect-$SLURM_JOB_ID.dcv s3://$bucket/
+url=$(aws s3 presign s3://$bucket/connect-$SLURM_JOB_ID.dcv)
+echo "$url"
+
+printf "Connect using the DCV Client with the following file:\n"
+printf "\e[34m=> %s \e[0m\n" "$url"
+
+while true; do
+   sleep 1
+done;
+```
+
+4. Once this runs you'll see output like:
+
+![Connect to DCV Client](/img/dcv-visualization-queue/dcv-thin-client-connect.png)
+
+5. Copy and paste the long url into the browser and you'll download a session file. Double click on the session file to connect via the client.
 
 ## Multiple Sessions Per-Instance
 
 By default Slurm will schedule each session on 1 vcpu. This means that our `g4dn.xlarge` instance type can fit 4 sessions:
 
-![image](https://user-images.githubusercontent.com/5545980/141414710-18bfe048-90e9-4bea-8faf-a0cf8b89db53.png)
+![Multi-Session](/img/dcv-visualization-queue/multi-session.png)
