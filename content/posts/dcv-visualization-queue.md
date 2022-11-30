@@ -1,5 +1,5 @@
 ---
-title: DCV Visualization Queue
+title: DCV Visualization Queue 🖥
 description:
 date: 2022-11-29
 tldr: Launch Graphic Desktops with AWS ParallelCluster. This allows you to run applications such as StarCCM+, shown below, without moving data.
