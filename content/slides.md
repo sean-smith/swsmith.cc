@@ -7,9 +7,15 @@ disqus: false
 
 Slides from various talks:
 
-# [CFD in the Cloud re:Invent Talk](slides/CMP208-CFD-in-Cloud.pdf)
+# [CFD in the Cloud, AWS SF Summit - April 20th, 2022](slides/CMP208-CFD-in-Cloud.pdf)
 
 [![CFD in the Cloud re:Invent Talk](slides/cmp208-slides.png)](slides/CMP208-CFD-in-Cloud.pdf)
+
+[Karthik Raman](https://scholar.google.com/citations?user=z6f6EKsAAAAJ&hl=en) and myself gave a talk at AWS SF Summit in 2022 titled "The future of Computation Fluid Dynamics in the Cloud".
+
+# [CFD in the Cloud re:Invent Talk - November 30th, 2021](slides/cmp405-slides.pdf)
+
+[![CFD in the Cloud re:Invent Talk](slides/cmp405.png)](slides/cmp405-slides.pdf)
 
 [Karthik Raman](https://scholar.google.com/citations?user=z6f6EKsAAAAJ&hl=en) and myself gave a talk at re:Invent 2021 titled "The future of Computation Fluid Dynamics in the Cloud".
 
