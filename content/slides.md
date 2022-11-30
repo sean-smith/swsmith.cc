@@ -7,6 +7,12 @@ disqus: false
 
 Slides from various talks:
 
+# [CFD in the Cloud, AWS re:Invent - November 30th, 2022](slides/cmp402-slides.pdf)
+
+[![CFD in the Cloud re:Invent Talk](slides/cmp402.png)](slides/cmp402-slides.pdf)
+
+[Dr. Neil Ashton](https://scholar.google.com/citations?user=mtBY0RcAAAAJ&hl=fr) and myself gave a talk at AWS re:Invent in 2022 titled "A day in the life of a cloud-empowered aerodynamics engineer".
+
 # [CFD in the Cloud, AWS SF Summit - April 20th, 2022](slides/CMP208-CFD-in-Cloud.pdf)
 
 [![CFD in the Cloud re:Invent Talk](slides/cmp208-slides.png)](slides/CMP208-CFD-in-Cloud.pdf)
