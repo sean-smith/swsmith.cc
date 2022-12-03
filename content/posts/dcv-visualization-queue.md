@@ -153,9 +153,17 @@ DCV provides a native client for MacOS, Windows and Linux. The client provides a
 ![DCV Client](/img/dcv-visualization-queue/dcv-client.png)
 
 1. Download the client [here](https://download.nice-dcv.com/).
-1. Next create a file a file `desktop.sbatch` with the following content:
-2. Change the line `bucket='your-bucket'` to point to a S3 bucket you own.
-3. Add permissions to your cluster to access this bucket.
+2. You'll need two additional iam policies set in your DCV queue. `AWSCloudFormationReadOnlyAccess` is used to descibe the bucket created with the cluster, and `AmazonS3FullAccess` is used to upload the connect file to that bucket. Simply modify the IAM section of your cluster with the following:
+
+```yaml
+      Iam:
+        AdditionalIamPolicies:
+          - Policy: arn:aws:iam::aws:policy/AWSCloudFormationReadOnlyAccess
+          - Policy: arn:aws:iam::aws:policy/AmazonS3FullAccess
+```
+
+3. Run an update for those policies to take effect.
+4. Next create a file a file `desktop.sbatch` with the following content.
 
 ```bash
 #!/bin/bash
@@ -174,9 +182,10 @@ sudo systemctl start dcvserver
 dcv create-session $SLURM_JOBID
 
 # params
+source /etc/parallelcluster/cfnconfig
 ip=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
 port=8443
-bucket='your-bucket'
+bucket=$(aws cloudformation describe-stacks --region $cfn_region --stack-name $stack_name --query "Stacks[0].Parameters[?ParameterKey=='ResourcesS3Bucket'].ParameterValue" --output text)
 
 cat <<EOT > connect-$SLURM_JOB_ID.dcv
 [version]
@@ -190,8 +199,8 @@ password=$password
 sessionid=$SLURM_JOB_ID
 EOT
 
-aws s3 cp connect-$SLURM_JOB_ID.dcv s3://$bucket/
-url=$(aws s3 presign s3://$bucket/connect-$SLURM_JOB_ID.dcv)
+aws s3 cp --region $cfn_region connect-$SLURM_JOB_ID.dcv s3://$bucket/
+url=$(aws s3 presign --region $cfn_region s3://$bucket/connect-$SLURM_JOB_ID.dcv)
 echo "$url"
 
 printf "Connect using the DCV Client with the following file:\n"
