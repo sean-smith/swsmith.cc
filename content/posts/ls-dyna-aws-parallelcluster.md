@@ -140,7 +140,7 @@ LS-DYNA_960      04/05/2021          0    216    600 |     0
 
 ## Step 4: Setup Slurm
 
-1. Create a file, we'll call it `submit.sh` that'll be used for submitting jobs to Slurm. 
+1. Create a file, we'll call it `submit.sh` that'll be used for submitting jobs to Slurm.
 
 ```bash
 #!/bin/bash
@@ -154,17 +154,23 @@ export LSTC_LICENSE_SERVER="31010@10.0.0.30"
 
 ####### USER PARAMS #######
 BINARY=/shared/ls-dyna_mpp_s_R12_0_0_x64_centos65_ifort180_avx512_openmpi4.0.0
-INPUT_FILE=/shared/BendTest/Header_Pole.key
-MEMORY=2G
-MEMORY2=400M
+INPUT_DIR=/shared/BendTest
+INPUT_FILE=Header_Pole.key
 NCORES=${SLURM_NTASKS}
 ####### USER PARAMS #######
 
+###### JOB DIR SETUP ######
+echo "created jobs/${SLURM_JOB_ID} to store job output.."
+mkdir -p jobs/${SLURM_JOB_ID} && cd "$_"
+ln -s $INPUT_DIR/* .
+###########################
+
+# load mpi and kick off mpirun
 module load openmpi
-mpirun -np ${NCORES} ${BINARY} I=${INPUT_FILE} MEMORY=${MEMORY} MEMORY2=${MEMORY2} NCPU=${NCORES} >> output.log 2>&1
+LSTC_MEMORY=auto mpirun -np ${NCORES} ${BINARY} I=${INPUT_FILE} MEMORY=${LSTC_MEMORY} NCPU=${NCORES} >> output.log 2>&1
 ```
 
-We've set `MEMORY = 2G` and `MEMORY2=400M` respectively. You can read more about LS-Dyna memory settings [here](https://www.d3view.com/a-few-words-on-memory-settings-in-ls-dyna/).
+We've set `LSTC_MEMORY=auto`, This allows LS-DYNA to use the initial memory values and then to dynamically allocate memory if it needs more memory. You can read more about memory settings [here](https://www.d3view.com/a-few-words-on-memory-settings-in-ls-dyna/).
 
 ## Step 5: Running LS-Dyna
 
