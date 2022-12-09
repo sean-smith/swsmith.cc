@@ -4,7 +4,7 @@ description:
 date: 2022-12-07
 tldr: Spack allows you to easily install scientific software on AWS ParallelCluster
 draft: false
-og_image: /img/spack/spack.svg
+og_image: /img/spack/build-cache.png
 tags: [aws parallelcluster, spack, aws]
 ---
 
