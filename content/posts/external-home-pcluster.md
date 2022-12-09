@@ -1,9 +1,10 @@
 ---
-title: Mount Home Directory in AWS ParallelCluster
+title: Mount Home Directory in AWS ParallelCluster 🗂
 description: 
 date: 2022-08-30
 tldr: Setup a persistent home directory with AWS ParallelCluster
 draft: false
+og_image: /img/external-home-pcluster/architecture.png
 tags: [aws parallelcluster, FSx Lustre, aws]
 ---
 
@@ -83,7 +84,7 @@ Now that we've switched the home directory, we can log out and connect again via
 
 You'll see the new home directory is `/shared/ec2-user`, which contains the contents of `/home/ec2-user`.
 
-## Multi-User
+## Multi-User (Posix)
 
 If you're using a [multi-user environment](parallelcluster-multi-user.html), make sure to specify the home directory upon user creation:
 
@@ -98,3 +99,18 @@ useradd -d /shared/$USERNAME -u $USERID $USERNAME
 ```
 
 See [Multi-User Setup](parallelcluster-multi-user.html) for more details.
+
+## Multi-User (Active Directory)
+
+If you've setup your cluster with [active directory](https://docs.aws.amazon.com/parallelcluster/latest/ug/tutorials_05_multi-user-ad.html), it's even easier. You can provide a flag in the [DirectoryServices/AdditionalSssdConfigs](https://docs.aws.amazon.com/parallelcluster/latest/ug/DirectoryService-v3.html#yaml-DirectoryService-AdditionalSssdConfigs) section of your config to specify the default home directory, for example:
+
+```yaml
+AdditionalSssdConfigs:
+  override_homedir = /shared/%u
+```
+
+In ParallelCluster Manager:
+
+![Additional SSSD Config](/img/external-home-pcluster/additional-sssdconfig.png)
+
+This sets the user's home directory to `/shared/<username>`. Read more about it [here](https://linux.die.net/man/5/sssd-ad).
