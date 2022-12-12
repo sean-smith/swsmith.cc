@@ -15,9 +15,9 @@ HeadNode:
 Scheduling:
   Scheduler: slurm
   SlurmQueues:
-    - Name: queue0
+    - Name: hpc
       ComputeResources:
-        - Name: queue0-hpc6a48xlarge
+        - Name: hpc-hpc6a48xlarge
           MinCount: 0
           MaxCount: 64
           InstanceType: hpc6a.48xlarge
@@ -45,4 +45,4 @@ SharedStorage:
       StorageCapacity: 1200
       DeploymentType: PERSISTENT_2
       DataCompressionType: LZ4
-      PerUnitStorageThroughput: 1000
+      PerUnitStorageThroughput: 500

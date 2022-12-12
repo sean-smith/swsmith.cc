@@ -153,10 +153,11 @@ export LSTC_LICENSE_SERVER="31010@10.0.0.30"
 ####### LICENSE ##########
 
 ####### USER PARAMS #######
-BINARY=/shared/ls-dyna_mpp_s_R12_0_0_x64_centos65_ifort180_avx512_openmpi4.0.0
-INPUT_DIR=/shared/BendTest
-INPUT_FILE=Header_Pole.key
+BINARY=/shared/ls-dyna/versions/ls-dyna_mpp_s_R12_0_0_x64_centos65_ifort180_avx512_openmpi4.0.0
+INPUT_DIR=/shared/ls-dyna/car2car
+INPUT_FILE=c2c.key
 NCORES=${SLURM_NTASKS}
+MPI=openmpi
 ####### USER PARAMS #######
 
 ###### JOB DIR SETUP ######
@@ -166,9 +167,21 @@ ln -s $INPUT_DIR/* .
 ###########################
 
 # load mpi and kick off mpirun
-module load openmpi
-LSTC_MEMORY=auto mpirun -np ${NCORES} ${BINARY} I=${INPUT_FILE} MEMORY=${LSTC_MEMORY} NCPU=${NCORES} >> output.log 2>&1
+module load $MPI
+LSTC_MEMORY=auto mpirun -np ${NCORES} ${BINARY} I=${INPUT_FILE} NCPU=${NCORES} >> output.log 2>&1
 ```
+
+You'll need to modify the following parameters:
+
+| Parameter           | Destination                                  | Example                         |
+|---------------------|----------------------------------------------|---------------------------------|
+| -n                  | Number of cores to run on.                   | `-n 384`                        |
+| -p                  | Compute partition to submit jobs too.        | `-p hpc`                        |
+| LSTC_LICENSE_SERVER | The port@ip address of the license server.   | `31010@10.0.0.30`               |
+| BINARY              | Full path to the LS-Dyna binary              | `/shared/.../ls-dyna_mpp_s_...` |
+| INPUT_FILE          | Input file, typically this is a `.key` file. | `/shared/ls-dyna/car2car`       |
+| INPUT_DIR           | Directory to fetch the input files from      | `c2c.key`                       |
+| MPI                 | Openmpi or Intel MPI                         | `openmpi`                       |
 
 We've set `LSTC_MEMORY=auto`, This allows LS-DYNA to use the initial memory values and then to dynamically allocate memory if it needs more memory. You can read more about memory settings [here](https://www.d3view.com/a-few-words-on-memory-settings-in-ls-dyna/).
 
@@ -209,7 +222,7 @@ $ sudo yum install -y htop && htop
 ## AWS ParallelCluster Config file
 ```yaml
 HeadNode:
-  InstanceType: c5a.2xlarge
+  InstanceType: c6a.2xlarge
   Ssh:
     KeyName: keypair
   Networking:
@@ -225,9 +238,9 @@ HeadNode:
 Scheduling:
   Scheduler: slurm
   SlurmQueues:
-    - Name: queue0
+    - Name: hpc
       ComputeResources:
-        - Name: queue0-hpc6a48xlarge
+        - Name: hpc-hpc6a48xlarge
           MinCount: 0
           MaxCount: 64
           InstanceType: hpc6a.48xlarge
@@ -255,5 +268,5 @@ SharedStorage:
       StorageCapacity: 1200
       DeploymentType: PERSISTENT_2
       DataCompressionType: LZ4
-      PerUnitStorageThroughput: 1000
+      PerUnitStorageThroughput: 500
 ```
