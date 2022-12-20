@@ -26,43 +26,62 @@ tags: [LS-Dyna, aws parallelcluster, FSx lustre, Ansys]
 
 ## Step 2: Install LS-Dyna
 
-1. Now we're going to install LS-Dyna in the `/shared` directory. Please ask Ansys/LSTC for the credentials to the [FTP site](https://ftp.lstc.com/user/mpp-dyna/), you'll need these credentials to access the software below.
-
-The version we've chosen is `ls-dyna_mpp_s_R12_0_0_x64_centos65_ifort180_avx512_openmpi4.0.0`, which I've broken down the naming scheme below. You're probably curious why we've chosen these defaults. These were chosen after benchmarking all the permutations:
-
-![LS-Dyna Binaries](/img/ls-dyna/benchmarking.png)
+Now we're going to install LS-Dyna. Please ask Ansys/LSTC for the credentials to the [FTP site](https://ftp.lstc.com/user/mpp-dyna/), you'll need these credentials to access the software. The version we've chosen is `ls-dyna_mpp_s_R13_1_1_x64_centos78_ifort190_avx2_intelmpi-2018`, which I've broken down the naming scheme below:
 
 |                 | Value        | Description                                                                      |
 |-----------------|--------------|----------------------------------------------------------------------------------|
-| Version         | 12.0.0       | Latest LS-Dyna version                                                           |
+| Version         | 13.1.1       | Latest LS-Dyna version                                                           |
 | Precision       | s            | Single precision, substitute 'd' for double precision. Note 90% of LS-Dyna is single precision.                                      |
 | MPI/Hybrid      | MPP          | MPP is the MPI version, hybrid (HYB) is OpenMP/MPI                               |
-| Platform        | x86_64       | Only x86 platforms currently supported                                           |
-| OS              | centos65     | Works with Centos 7 & 8, Amazon Linux 1 & 2                                      |
-| Fortran version | ifort180     | Fortran version, doesn't need to be installed.                                   |
+| Platform        | x64       | x86_64 platform                                           |
+| OS              | centos78     | Works with Centos 7 & 8, Amazon Linux 1 & 2                                      |
+| Fortran version | ifort190     | Fortran version, doesn't need to be installed.                                   |
 | Feature         | avx2      | Intel's Advanced Vector Instructions (AVX), AVX2 is used so it'll work on the AMD based `hpc6a.48xlarge` instance. If using an intel instance, use AVX512. |
-| MPI Version     | openmpi4.0.0 | Versions compatible with EFA include Open MPI 4.X.X or Intel MPI 2018.X          |
+| MPI Version     | intelmpi 2018 | Versions compatible with EFA include Open MPI 4.X.X or Intel MPI 2018.X          |
 
-```bash
-cd /shared
-USERNAME=#ask ansys/lstc for this
-PASSWORD=#ask ansys/lstc for this
-wget https://ftp.lstc.com/user/mpp-dyna/R12.0.0/x86-64/ifort_180_avx512/MPP/ls-dyna_mpp_s_R12_0_0_x64_centos65_ifort180_avx512_openmpi4.0.0.gz_extractor.sh --user $USERNAME --password $PASSWORD --no-check-certificate
-wget https://ftp.lstc.com/user/mpp-dyna/R12.0.0/x86-64/ifort_180_avx512/MPP/ls-dyna_mpp_s_R12_0_0_x64_centos65_ifort180_avx512_openmpi4.0.0_sharelib.gz_extractor.sh --user $USERNAME --password $PASSWORD --no-check-certificate
-```
+You're probably curious why we've chosen these defaults. These were chosen after benchmarking all the permutations:
 
-2. Run the extractor script, this will pop up with a license agreement, type 'q' to go to the bottom, then type 'y' to agree and then 'n' to install in `/shared` as opposed to creating a folder.
+![LS-Dyna Binaries](/img/ls-dyna/benchmarking.png)
 
-```bash
-$ bash ls-dyna_mpp_s_R12_0_0_x64_centos65_ifort180_avx512_openmpi4.0.0.gz_extractor.sh
-$ bash ls-dyna_mpp_s_R12_0_0_x64_centos65_ifort180_avx512_openmpi4.0.0_sharelib.gz_extractor.sh
-$ rm ls-dyna_mpp_s_R12_0_0_x64_centos65_ifort180_avx512_openmpi4.0.0.gz_extractor.sh
-$ chmod +x ls-dyna_mpp_s_R12_0_0_x64_centos65_ifort180_avx512_openmpi4.0.0*
-```
+1. Create a directory `/shared/ls-dyna/versions` in the shared folder to store the LS-Dyna binaries:
+
+    ```bash
+    # create a directory for the LS-Dyna versions:
+    mkdir -p /shared/ls-dyna/versions && cd "$_"
+    ```
+
+2. Create a script called `download.sh` with the following contents. Input the `USERNAME` and `PASSWORD` from Ansys:
+
+    ```bash
+    #!/bin/bash
+
+    # Usage:
+    #  ./download.sh https://ftp.lstc.com/user/mpp-dyna/...
+    #
+    #  This downloads and extracts the LS-Dyna binary.
+
+    if [ ! -n "$1" ]; then
+      echo "Usage ./download.sh [ls-dyna-version-url]"
+    fi
+
+    USERNAME=#ask ansys/lstc for this
+    PASSWORD=#ask ansys/lstc for this
+
+    wget $1 --user $USER --password $PASSWORD
+    bash $(basename $1)
+    rm $(basename $1)
+    ```
+
+2. Run the download script, `./download.sh [ls-dyna url]` this will pop up with a license agreement, type 'q' to go to the bottom, then type 'y' to agree to the license and then 'n' to install in current directory `/shared/ls-dyna/versions`:
+
+    ```bash
+    ./download.sh https://ftp.lstc.com/user/mpp-dyna/R13.1.1/x86-64/ifort_190_avx2/MPP/ls-dyna_mpp_s_R13_1_1_x64_centos78_ifort190_avx2_intelmpi-2018.tgz_extractor.sh
+    ./download.sh https://ftp.lstc.com/user/mpp-dyna/R13.1.1/x86-64/ifort_190_avx2/MPP/ls-dyna_mpp_s_R13_1_1_x64_centos78_ifort190_avx2_intelmpi-2018_sharelib.tar.gz_extractor.sh
+    ```
 
 3. You should now see two binaries:
 
-![LS-Dyna Binaries](/img/ls-dyna/binaries.png)
+    ![LS-Dyna Binaries](/img/ls-dyna/binaries.png)
 
 ## Step 3: Setup LSTC License Server
 
