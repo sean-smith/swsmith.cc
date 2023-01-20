@@ -1,7 +1,7 @@
 ---
 title: Slurm Login Node with AWS ParallelCluster 🖥
 description:
-date: 2022-11-10
+date: 2023-01-20
 tldr: Create a seperate Slurm login node with AWS ParallelCluster
 draft: false
 og_image: /img/slurm-login/architecture.png
@@ -20,13 +20,13 @@ To seperate the Slurm Scheduler instance from the login node, you can launch a s
 
     ![Slurm Login Node](/img/slurm-login/ec2-clone.png)
 
-2. Now edit the Security Group of the old HeadNode to allow traffic from the Login Node. Add a route for all traffic with the source `[cluster_name]-HeadNodeSecurityGroup`.
+2. Now edit the Security Group of the old HeadNode to allow ingress traffic from the Login Node. Add a route for all traffic with the source `[cluster_name]-HeadNodeSecurityGroup`.
 
     | Type        | Source                               | Description               |
     |-------------|--------------------------------------|---------------------------|
     | All Traffic | `[cluster-name]-HeadNodeSecurityGroup` | Allow traffic to HeadNode |
 
-3. SSH into this instance and Mount NFS from the HeadNode (where `172.31.19.195` is the HeadNode ip).
+3. SSH into this instance and Mount NFS from the HeadNode **private ip** (where `172.31.19.195` is the HeadNode ip). Note this must be the private ip, if you use the public ip this will time out.
 
     ```bash
     mkdir -p /opt/slurm
@@ -48,48 +48,33 @@ To seperate the Slurm Scheduler instance from the login node, you can launch a s
     systemctl start munge
     ```
 
-5. Add `SLURM_HOME` and `SLURM_HOME/bin` to your path:
+5. Add `/opt/slurm/bin` to your `PATH`:
 
     ```bash
-    echo "export SLURM_HOME='/opt/slurm'" >> ~/.bashrc
-    echo "export PATH=\$SLURM_HOME/bin:\$PATH" >> ~/.bashrc
-    ```
-
-6. Start the Slurm service by creating a systemd file:
-
-    ```bash
-    cat <<EOF > /etc/systemd/system/slurmd.service
-    [Unit]
-    Description=Slurm node daemon
-    After=munge.service network.target remote-fs.target
-    ConditionPathExists=/opt/slurm/etc/slurm.conf
-
-    [Service]
-    Type=simple
-    EnvironmentFile=-/etc/sysconfig/slurmd
-    ExecStart=/opt/slurm/sbin/slurmd -D $SLURMD_OPTIONS
-    ExecReload=/bin/kill -HUP $MAINPID
-    KillMode=process
-    LimitNOFILE=131072
-    LimitMEMLOCK=infinity
-    LimitSTACK=infinity
-    Delegate=yes
-
-    [Install]
-    WantedBy=multi-user.target
+    sudo su
+    cat > /etc/profile.d/slurm.sh << EOF
+    PATH=\$PATH:/opt/slurm/bin
+    MANPATH=\$MANPATH:/opt/slurm/share/man
     EOF
+    exit
+    source /etc/profile.d/slurm.sh
     ```
 
-Now start the service:
+6. Now you can run Slurm commands such as `sinfo`:
 
-```bash
-sudo systemctl enable slurmd.service
-sudo systemctl start slurmd.service
-```
+    ```bash
+    $ sinfo
+    PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+    hpc6a*       up   infinite     64  idle~ hpc6a-dy-hpc6a-hpc6a48xlarge-[1-64]
+    c6i          up   infinite      6  idle~ c6i-dy-c6i-c6i32xlarge-[1-6]
+    hpc6id       up   infinite     64  idle~ hpc6id-dy-hpc6id-hpc6id32xlarge-[1-64]
+    ```
 
 Now we can submit jobs and see the partitions!
 
 ## Packer 📦
+
+I've also put together a script to automate these steps with packer.
 
 1. First install [packer](https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli), on mac / linux you can use `brew`:
 

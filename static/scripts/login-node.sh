@@ -32,7 +32,7 @@ region=$(pcluster describe-cluster -n $cluster_name | jq '.region')
 echo "Found Subnet $region...${NC}"
 
 echo 'Writing to variables.json...'
-cat <<EOF | tee variables2.json
+cat <<EOF | tee variables.json
 {
   "aws_region": $region,
   "cluster_name": "$cluster_name",
