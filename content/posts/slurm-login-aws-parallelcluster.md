@@ -8,6 +8,8 @@ og_image: /img/slurm-login/architecture.png
 tags: [ec2, aws parallelcluster, hpc, aws, slurm]
 ---
 
+**Update:** This has been written up on the ParallelCluster Wiki: [ParallelCluster: Launching a Login Node](https://github.com/aws/aws-parallelcluster/wiki/ParallelCluster:-Launching-a-Login-Node)
+
 ![Architecture Diagram](/img/slurm-login/architecture.png)
 
 To seperate the Slurm Scheduler instance from the login node, you can launch a seperate instance and connect it to the cluster. This ensures seperating between what the users might do on the login node and the vital scheduler process.
