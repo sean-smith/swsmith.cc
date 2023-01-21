@@ -26,6 +26,11 @@
       "shutdown_behavior": "terminate",
       "associate_public_ip_address": "{{user `public_ip`}}",
       "encrypt_boot": "{{user `encrypt_boot`}}",
+      "security_group_filter": {
+        "filters": {
+          "tag:parallelcluster:cluster-name": "{{user `cluster_name`}}"
+        }
+      },
       "tags": {
           "Name": "{{user `cluster_name`}}-login-node-parallelcluster-{{ user `parallel_cluster_version`}}-amzn2",
           "State": "{{user `state`}}",
@@ -134,8 +139,8 @@
     {
       "type": "shell",
       "inline": [
-        "echo 'export SLURM_HOME=/opt/slurm' | sudo tee -a /etc/profile.d/login-node.sh",
-        "echo 'export PATH=$SLURM_HOME/bin:$PATH' | sudo tee -a /etc/profile.d/login-node.sh"
+        "echo 'PATH=/opt/slurm/bin:$PATH' | sudo tee -a /etc/profile.d/slurm.sh",
+        "echo 'MANPATH=/opt/slurm/share/man:$MANPATH' | sudo tee -a /etc/profile.d/slurm.sh"
       ]
     }
   ]

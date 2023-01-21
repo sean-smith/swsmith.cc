@@ -12,7 +12,17 @@ tags: [ec2, aws parallelcluster, hpc, aws, slurm]
 
 ![Architecture Diagram](/img/slurm-login/architecture.png)
 
-To seperate the Slurm Scheduler instance from the login node, you can launch a seperate instance and connect it to the cluster. This ensures seperating between what the users might do on the login node and the vital scheduler process.
+Some reasons why you may want to use a Login Node:
+
+* Separation of scheduler `slurmctld` process from users. This helps prevent a case where a user consumes all the system resources and Slurm can no longer function.
+* Ability to set different IAM permissions for Login versus Head Node.
+
+I've divided the setup into two parts:
+
+1. [Create a Login Node manually](#setup)
+2. [Automate Login Node creation with packer](#packer-)
+
+I highly advise starting the manual approach before moving to the more automated packer setup.
 
 ## Setup
 
@@ -76,33 +86,48 @@ Now we can submit jobs and see the partitions!
 
 I've also put together a script to automate these steps with packer.
 
-1. First install [packer](https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli), on mac / linux you can use `brew`:
+1. First edit the Security Group of the HeadNode to allow ingress traffic from the Login Node. Add a route for all traffic with the source `[cluster_name]-HeadNodeSecurityGroup`. This is essentially a circular route, since both are going to share the same Security Group traffic can flow between them.
+
+    | Type        | Source                               | Description               |
+    |-------------|--------------------------------------|---------------------------|
+    | All Traffic | `[cluster-name]-HeadNodeSecurityGroup` | Allow traffic to HeadNode |
+
+2. First install [packer](https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli), on mac / linux you can use `brew`:
 
     ```bash
     brew install packer
     ```
 
-2. Download the files [pc-login-node.json](https://swsmith.cc/scripts/pc-login-node.json) and [login-node.sh](https://swsmith.cc/scripts/login-node.sh):
+3. Download the files [configure.sh](https://swsmith.cc/scripts/login-node/configure.sh), [packer.json](https://swsmith.cc/scripts/login-node/packer.json) and [launch.sh](https://swsmith.cc/scripts/login-node/launch.sh):
 
     ```bash
-    wget https://swsmith.cc/scripts/login-node.sh
-    wget https://swsmith.cc/scripts/pc-login-node.json
+    wget https://swsmith.cc/scripts/login-node/configure.sh
+    wget https://swsmith.cc/scripts/login-node/packer.json
+    wget https://swsmith.cc/scripts/login-node/launch.sh
     ```
 
-3. Run the bach script `login-node.sh` and input your **cluster's name** when prompted. This will generate a file `variables.json` with all the relevant cluster information:
+4. Run the bash script `configure.sh` and input your **cluster's name** when prompted. This will generate a file `variables.json` with all the relevant cluster information:
 
     ```bash
-    bash login-node.sh 
+    bash configure.sh
     ```
 
-4. Run Packer:
+    ![Packer Script](/img/slurm-login/login-node-script.png)
+
+5. Run Packer:
 
     ```bash
-    packer build -color=true -var-file variables.json pc-login-node.json
+    packer build -color=true -var-file variables.json packer.json
     ```
 
-5. That'll produce an AMI that we can launch in the same AZ as the HeadNode:
+6. That'll produce an AMI that we can launch using the `launch.sh` script:
 
     ```bash
-    bash launch-loginnode.sh 
+    bash launch.sh
     ```
+
+    Now you'll see a new node under the [Cluster Name] > Instances tab in ParallelCluster:
+
+    ![ParallelCluster Manager Login Node](/img/slurm-login/pcm-login-node.png)
+
+    You can ssh in using the **Public IP** address.

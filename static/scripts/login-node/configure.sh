@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright Sean Smith 2022 <seaam@amazon.com>
+# Copyright Sean Smith 2023 <seaam@amazon.com>
 
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
