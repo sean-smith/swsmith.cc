@@ -8,9 +8,15 @@ og_image: img/gromacs/logo.png
 tags: [aws parallelcluster, gromacs, slurm, aws, spack]
 ---
 
-![Gromacs](/img/gromacs/logo.png)
+## **Note**: this has been turned into an AWS Workshop! 🚀 Check it out: [Gromacs on AWS ParallelCluster](https://catalog.workshops.aws/gromacs-on-aws-parallelcluster)
 
-Gromacs is a popular open source Molecular Dynamics application. It supports GPU and CPU acceleration and supports multi-node processing using MPI. In the following guide we'll setup a MPI compatible version of Gromacs using [Spack](https://spack.io/) package manager.
+{{< rawhtml >}}
+<p align="center">
+    <img src='/img/gromacs/logo.png' alt='Gromacs Logo' style='border: 0px;' />
+</p>
+{{< /rawhtml >}}
+
+[Gromacs](https://www.gromacs.org/) is a popular open source Molecular Dynamics application. It supports GPU and CPU acceleration and supports multi-node processing using MPI. In the following guide we'll setup a MPI compatible version of Gromacs using [Spack](https://spack.io/) package manager.
 
 ## Setup
 
