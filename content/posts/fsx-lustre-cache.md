@@ -3,7 +3,7 @@ title: FSx Lustre as a Cache for S3 🗃️
 description:
 date: 2023-02-28
 tldr: Reduce filesystem costs with intelligent caching where data is pulled from S3 into FSx Lustre when needed and evicted when the filesystem reaches a threshold.
-draft: true
+draft: false
 og_image: /img/fsx-lustre/architecture.png
 tags: [fsx lustre, AWS ParallelCluster, hpc, s3, aws]
 ---
@@ -76,13 +76,53 @@ To achieve even greater cost savings you can combine this with Intelligent Tieri
 
 The script creates a file `/tmp/FSx-Cache-Eviction-log-[date].txt`, you can tail that file to see if it's evicting data from the filesystem:
 
-```
-tail -f /tmp/FSx-Cache-Eviction-log-[date].txt
-```
+  ```
+  tail -f /tmp/FSx-Cache-Eviction-log-[date].txt
+  ```
 
-In addition, you can monitor the size of your filesystem on the [AWS ParallelCluster Metrics Dashboard]().
+In addition, you can monitor the size of your filesystem on the [AWS ParallelCluster Metrics Dashboard](https://docs.aws.amazon.com/parallelcluster/latest/ug/cloudwatch-dashboard-v3.html).
 
-![]()
+  ![FSx Metrics Dashboard](/img/fsx-lustre-cache/fsx-metrics.png)
 
 ## Testing
 
+To test this we'll create a bunch of dummy data using [ior](https://github.com/hpc/ior), a filesystem testing tool. We'll then run the cache eviction script and use CloudWatch Metrics to observe the decrease in filesystem size.
+
+1. Install `ior`:
+
+    ```bash
+    cd /shared
+    wget https://github.com/hpc/ior/releases/download/3.3.0/ior-3.3.0.tar.gz
+    tar -xzf ior-3.3.0.tar.gz
+    cd ior-3.3.0/
+    ./configure
+    make
+    make install
+    ```
+
+2. Run IOR to fill up the filesystem:
+
+    ```bash
+    threads=$(($(nproc --all) * 4))
+    mpirun --npernode ${threads} --oversubscribe ior -b 1m -c -k -o /shared/ior-data -s 10240 -t 1m -v -w -z
+    ```
+
+3. Check the filesystem size. You'll see we just filled up **90%** of the filesystem and now need to evict some files:
+
+    ```bash
+    $ df -h /shared
+    172.31.21.102@tcp:/ybajnbmv  1.1T  1.0T  1.1T   90% /shared
+    ```
+
+4. Run the export script, you can change the `-minage` to `0` so it evicts the large file we just created with `ior`:
+
+    ```bash
+    /opt/parallelcluster/shared/cache-eviction.sh -mountpath /shared -mountpoint /shared -minage 0 -minsize 2000 -bucket bucket
+    ```
+
+5. Check the filesystem size after the log file `/tmp/FSx-Cache-Eviction-log-[date].txt` shows export complete.
+
+    ```bash
+    $ df -h /shared
+    172.31.21.102@tcp:/ybajnbmv  1.1T  200GB  1.1T   20% /shared
+    ```
