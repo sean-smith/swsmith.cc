@@ -39,6 +39,7 @@ Let's say you want to use a an instance type that doesn't have NVME but you want
     #   5. format filesystem
     #   6. mount filesystem
     #   7. persist volume after reboots
+    #   8. Set DeleteOnTerminate to cleanup volume
 
     mount_point="${1:-/scratch}"
     type="${2:-gp3}"
@@ -88,6 +89,9 @@ Let's say you want to use a an instance type that doesn't have NVME but you want
 
     # 7. Persist Volume after reboots by putting it into /etc/fstab
     echo "${device} ${mount_point} xfs defaults,nofail 0 2" >> /etc/fstab
+
+    # 8. Set DeleteOnTerminate to cleanup volume
+    aws ec2 modify-instance-attribute --instance-id ${instance_id} --block-device-mappings "[{\"DeviceName\": \"${device}\",\"Ebs\":{\"DeleteOnTermination\":true}}]"
     ```
 
 2. Upload it to an S3 bucket. For your convenience, I've also hosted the script at `https://swsmith.cc/scripts/attach_ebs.sh`.
