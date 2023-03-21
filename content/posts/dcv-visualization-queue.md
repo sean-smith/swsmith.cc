@@ -87,7 +87,7 @@ dcv create-session $SLURM_JOBID
 
 ip=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
 printf "\e[32mClick the following URL to connect:\e[0m"
-printf "\n=> \e[34mhttps://$ip:8443?username=$USER&password=$password\e[0m\n"
+printf "\n=> \e[34mhttps://$ip:8443?username=$USER&password=$password&session-id=$SLURM_JOB_ID\e[0m\n"
 
 while true; do
    sleep 1
@@ -133,7 +133,7 @@ printf "\e[32mFor a no-ingress cluster, you'll need to run the following command
 printf "\n=> \e[37m\taws ssm start-session --target $instance_id --document-name AWS-StartPortForwardingSession --parameters '{\"portNumber\":[\"8443\"],\"localPortNumber\":[\"8443\"]}'\e[0m\n"
 
 printf "\n\n\e[32mThen click the following URL to connect:\e[0m"
-printf "\n=> \e[34mhttps://localhost:8443?username=$USER&password=$password\e[0m\n"
+printf "\n=> \e[34mhttps://localhost:8443?username=$USER&password=$password&session-id=$SLURM_JOB_ID\e[0m\n"
 
 while true; do
    sleep 1
