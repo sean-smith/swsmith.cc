@@ -6,7 +6,7 @@
 # Install S3 Mountpoint if it's not installed
 if [ ! -x "$(which mount-s3)" ]; then
     sudo yum install -y fuse fuse-devel cmake3 clang-devel
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && source "$HOME/.cargo/env"
     git clone --recurse-submodules https://github.com/awslabs/mountpoint-s3.git
     cd mountpoint-s3/
     cargo build --release
@@ -20,4 +20,5 @@ network=$(aws ec2 --region ${region} describe-instance-types --instance-types ${
 
 # Mount S3 Bucket
 mkdir -p ${1}
+chown $cfn_cluster_user:$cfn_cluster_user ${1}
 mount-s3 --throughput-target-gbps ${network} ${2} ${1}

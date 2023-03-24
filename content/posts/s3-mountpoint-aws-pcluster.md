@@ -116,9 +116,20 @@ Image:
 1. Once the cluster goes into **CREATE_COMPLETE**, connect to the Head Node and list out the files:
 
 ```bash
-ls -la /shared
-....
+$ sudo ls -la /mybucket
+total 120056511
+drwxr-xr-x  2 root root           0 Mar 24 13:15 .
+dr-xr-xr-x 24 root root        4096 Mar 24 13:05 ..
+-rw-r--r--  1 root root  6596329472 Oct 29  2020 ANSYS2019R3_LINX64_Disk2.iso
+drwxr-xr-x  2 root root           0 Mar 24 13:15 ansys-installer
+drwxr-xr-x  2 root root           0 Mar 24 13:15 api
+-rw-r--r--  1 root root         651 Apr 22  2022 budget.json
+-rw-r--r--  1 root root        4515 Jul 16  2021 c2c.inp
+-rw-r--r--  1 root root        2132 Dec  9  2020 calculate_nodes.py
+drwxr-xr-x  2 root root           0 Mar 24 13:15 car2car
 ```
+
+1. You'll notice the files are owned by `root`, this is because the post-install script is run as root
 
 ## Debug
 
