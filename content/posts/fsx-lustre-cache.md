@@ -100,11 +100,11 @@ To test this we'll create a bunch of dummy data using [ior](https://github.com/h
     make install
     ```
 
-2. Run IOR to fill up the filesystem:
+2. Run IOR to fill up the filesystem. In this example we write a total of `1.25TB` of data. You can adjust the `-s` flag based on your filesystem size.
 
     ```bash
     threads=$(($(nproc --all) * 4))
-    mpirun --npernode ${threads} --oversubscribe ior -b 1m -c -k -o /shared/ior-data -s 10240 -t 1m -v -w -z
+    mpirun --npernode ${threads} --oversubscribe ior -b 1m -c -k -o /shared/ior-data -s 81920 -t 1m -v -w -z
     ```
 
 3. Check the filesystem size. You'll see we just filled up **90%** of the filesystem and now need to evict some files:

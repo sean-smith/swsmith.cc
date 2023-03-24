@@ -17,7 +17,7 @@ Since 3.2.0, FSx Netapp is a [supported filesystem](https://docs.aws.amazon.com/
 
 * Multi-Protocol
 * Hybrid support
-* Multi-AZ (for High Availibility)
+* Multi-AZ (for High Availability)
 
 **Cons**
 

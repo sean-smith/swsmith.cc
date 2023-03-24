@@ -1,0 +1,54 @@
+HeadNode:
+  InstanceType: c5.xlarge
+  Networking:
+    SubnetId: subnet-12345
+  Ssh:
+    KeyName: keypair
+  LocalStorage:
+    RootVolume:
+      VolumeType: gp3
+  Iam:
+    AdditionalIamPolicies:
+      - Policy: arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      - Policy: arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
+    S3Access:
+      - BucketName: mybucket
+  CustomActions:
+    OnNodeConfigured:
+      Script: https://swsmith.cc/scripts/s3-mountpoint.sh
+      Args:
+        - /shared
+        - mybucket
+Scheduling:
+  Scheduler: slurm
+  SlurmQueues:
+    - Name: queue0
+      AllocationStrategy: lowest-price
+      ComputeResources:
+        - Name: queue0-compute-resource-0
+          Instances:
+            - InstanceType: c5n.large
+          MinCount: 0
+          MaxCount: 4
+      Networking:
+        SubnetIds:
+          - subnet-8b15a7c6
+      ComputeSettings:
+        LocalStorage:
+          RootVolume:
+            VolumeType: gp3
+      Iam:
+        S3Access:
+            - BucketName: mybucket
+        AdditionalIamPolicies:
+            - Policy: arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
+      CustomActions:
+        OnNodeConfigured:
+          Script: https://swsmith.cc/scripts/s3-mountpoint.sh
+          Args:
+            - /shared
+            - mybucket
+  SlurmSettings: {}
+Region: us-east-2
+Image:
+  Os: alinux2
