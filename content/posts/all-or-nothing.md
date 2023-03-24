@@ -59,7 +59,7 @@ aws s3 cp all-or-nothing.sh s3://bucket
 
 3. Modify config to specify the `all-or-nothing.sh` script in the `HeadNode` > `CustomActions` section. 
 
-**Note:** I used the `multi-runner.sh` script here, this allows you to specify multiple scripts, each as an arg, however you can just specify it under `Script` if you so desire.
+**Note:** I used the [multi-runner.sh](/scripts/multi-runner.sh) script here, this allows you to specify multiple scripts, each as an arg, however you can just specify it under `Script` if you so desire.
 
 ```yaml
 HeadNode:
@@ -77,7 +77,7 @@ HeadNode:
   CustomActions:
     OnNodeConfigured:
       Script: >-
-        https://raw.githubusercontent.com/aws-samples/pcluster-manager/main/resources/scripts/multi-runner.py
+        https://swsmith.cc/scripts/multi-runner.sh
       Args:
         - s3://bucket/all-or-nothing.sh
 Scheduling:
@@ -151,4 +151,20 @@ If I look in `/var/log/parallelcluster/slurm_resume.log`, I can confirm `0` inst
 2022-06-21 23:37:55,846 - [slurm_plugin.resume:_resume] - INFO - Successfully launched nodes (x0) []
 ```
 
-Now I can change my instance job size or use another Availibility Zone to accomodate this job. 
+Now I can change my instance job size or use another Availability Zone to accomodate this job.
+
+## --no-requeue flag
+
+If you add in the `--no-requeue` flag and the job doesn't get capacity, it'll automatically drop off the queue, i.e.
+
+```bash
+$ sbatch -p queue1 -N 4 --exclusive --no-requeue submit.sh
+$ watch squeue
+Every 2.0s: squeue                                                                                                                 Fri Mar 24 15:21:23 2023
+
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+                 2    queue1 submit.s ec2-user PD       0:00      4 (Nodes required for job are DOWN, DRAINED or reserved for jobs in higher priority parti
+tions)
+```
+
+After about 5 minutes, the job will drop off the queue. If you want the job to continue pending add in the `--requeue` flag (this is the default).
