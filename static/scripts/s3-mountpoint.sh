@@ -6,10 +6,10 @@
 # Install S3 Mountpoint if it's not installed
 if [ ! -x "$(which mount-s3)" ]; then
     sudo yum install -y fuse fuse-devel cmake3 clang-devel
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && source "$HOME/.cargo/env"
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
     git clone --recurse-submodules https://github.com/awslabs/mountpoint-s3.git
     cd mountpoint-s3/
-    cargo build --release
+    source "/root/.cargo/env" && cargo build --release
     mv target/release/mount-s3 /usr/bin/
 fi
 
