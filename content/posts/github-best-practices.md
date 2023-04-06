@@ -1,10 +1,16 @@
 ---
-title: Github Best Practices
+title: Github Best Practices 🦸‍♂️
 description:
 date: 2021-06-14
 draft: false
 tags: [Git, Github]
 ---
+
+{{< rawhtml >}}
+<p align="center">
+    <img src='/img/github/github-mark.svg' alt='Github Logo' style='border: 0px; width: 200px;' />
+</p>
+{{< /rawhtml >}}
 
 *tl;dr*
 

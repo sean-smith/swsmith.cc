@@ -1,5 +1,5 @@
 ---
-title: Dynamic Filesystems with AWS ParallelCluster
+title: Dynamic Filesystems with AWS ParallelCluster 🗂️
 description:
 date: 2022-05-20
 tldr: Mount Filesystems per-job using Slurm job dependencies

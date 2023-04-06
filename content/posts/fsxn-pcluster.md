@@ -1,5 +1,5 @@
 ---
-title: Mount FSx Netapp ONTAP with AWS ParallelCluster
+title: Mount FSx Netapp ONTAP with AWS ParallelCluster 🗂️
 description:
 date: 2022-05-16
 tldr: Multi-Protocol filesystem for AWS ParallelCluster

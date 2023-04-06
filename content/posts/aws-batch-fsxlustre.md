@@ -160,4 +160,4 @@ Outputs:
 
 To test this I submitted a sample job. I was able to see that it mounted the filesystem by looking in the logs and seeing the ouput of my `ls /fsx` command:
 
-<img width="835" alt="image" src="https://user-images.githubusercontent.com/5545980/159823271-7c980367-575d-4ade-b81c-ffb6396a592c.png">
+![FSx Lustre Logs](/img/batch-lustre/logs.png)
