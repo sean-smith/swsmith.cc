@@ -1,22 +1,31 @@
 ---
 title: Cost Explorer with AWS ParallelCluster 📊
 description:
-date: 2022-02-11
+date: 2023-04-06
 tldr: Track cluster cost with AWS Cost Explorer
 draft: false
 tags: [ec2, AWS ParallelCluster, hpc, aws, cost explorer]
 ---
 
-# Cost Explorer with AWS ParallelCluster
+{{< rawhtml >}}
+<p align="center">
+    <img src='/img/cost-explorer/aws-cost-explorer.png' alt='Cost Explorer Logo' style='border: 0px; width:600px;' />
+</p>
+{{< /rawhtml >}}
 
-Budgets allow you to track cost at the per-cluster basis, they do this by tracking tags applied automatically to EC2 Instances launched with pcluster.
+[Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) allows you to track cost at the cluster, queue, user and job level. It does this by tracking tags applied automatically to EC2 Instances launched with parallelcluster.
 
 This gives users a view of exactly how much a cluster costs overtime, it tracks:
 
 * EC2 Instances
 * EBS Volumes
-* ~FSx Lustre Volumes~
-* ~EFS Volumes~
+* ~~FSx Lustre Volumes~~
+* ~~EFS Volumes~~
+* ~~Data Transfer~~
+
+## Setup
+
+Ok so how do we set this up?
 
 1. Activate the `parallelcluster:cluster-name` tag in the [Billing Dashboard > Cost Allocation Tags](https://console.aws.amazon.com/billing/home?#/tags)
 
@@ -67,30 +76,48 @@ You can also track resources based on custom tags, such as **user**, **job id**,
         AdditionalIamPolicies:
             - Policy: arn:aws:iam::822857487308:policy/pclustertagging
     ```
-
-3. In your job submission script, add the tag **before** your submit command:
+3. Update the cluster to apply this new policy.
+4. Next we'll create a [Slurm Prolog](https://slurm.schedmd.com/prolog_epilog.html) script to automatically tag instances prior to job launch:
 
     ```bash
-    #!/bin/bash
-    #SBATCH -N 1
-    #SBATCH --exclusive
+    cat << EOF > /opt/slurm/etc/prolog.sh
+    #!/bin/sh
 
-    # get instance id and tag instance with job id
+    # get instance id
     instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
     region=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | )
+
+    # tag instance with job-id
     aws --region ${region} ec2 create-tags --resources ${instance_id} --tags Key=parallelcluster:job-id,Value=${SLURM_JOB_ID}
 
-    # rest of job submission
-    # ...
+    # tag instance with user
+    aws --region ${region} ec2 create-tags --resources ${instance_id} --tags Key=parallelcluster:user,Value=${SLURM_JOB_USER}
+
+    # tag instance with job name
+    aws --region ${region} ec2 create-tags --resources ${instance_id} --tags Key=parallelcluster:job-name,Value=${SLURM_JOB_NAME}
+
+    EOF
+    chmod 744 /opt/slurm/etc/prolog.sh
+
+    echo "Prolog=/opt/slurm/etc/prolog.sh" >> /opt/slurm/etc/slurm.conf
+    systemctl restart slurmctld
     ```
 
     In the following table I list environment variables that can be used for the tag:
 
     |         | **Environment Variable** | **Description**                                                          |
     |---------|---------------------------|--------------------------------------------------------------------------|
-    | User    | `$USER`                   | User submitting the job.                                                 |
+    | User    | `$SLURM_JOB_USER`         | User submitting the job.                                                 |
     | Job ID  | `$SLURM_JOB_ID`           | Job ID assigned by Slurm.                                                |
     | Project | `$SLURM_JOB_NAME`         | Job name can be used to track project / application, i.e. `cfd` or `fea` |
+    | Account | `$SLURM_JOB_ACCOUNT`         | Slurm account setup by [sacct](https://slurm.schedmd.com/sacct.html). |
+    | Comment | `$SLURM_JOB_COMMENT`         | This can be used for any other categorization you want to apply. Users specify the comment at job submission time with `sbatch --comment ...`. |
+
+5. Now users can submit a job like normal, keep in mind they should use the `--exclusive` flag to ensure the instance isn't shared with another job (and thus tag is overwritten):
+
+    ```
+    sbatch --exclusive submit.sh
+    ```
 
 4. Now when the job is launched you can run a similar query on cost explorer but get data from these tags. In the following example I added a tag `parallelcluter:project` and then used that to see aggregate project costs across all my clusters.
 
