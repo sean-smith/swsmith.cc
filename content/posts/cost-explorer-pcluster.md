@@ -4,6 +4,7 @@ description:
 date: 2023-04-06
 tldr: Track cluster cost with AWS Cost Explorer
 draft: false
+og_image: /img/cost-explorer/aws-cost-explorer.png
 tags: [ec2, AWS ParallelCluster, hpc, aws, cost explorer]
 ---
 
