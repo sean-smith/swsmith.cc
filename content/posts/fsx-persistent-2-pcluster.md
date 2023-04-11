@@ -1,5 +1,5 @@
 ---
-title: Setup FSx Lustre PERSISTENT_2 with AWS ParallelCluster
+title: Setup FSx Lustre PERSISTENT_2 with AWS ParallelCluster 🗂️
 description:
 date: 2022-02-19
 tldr: fast filesystem for hpc clusters

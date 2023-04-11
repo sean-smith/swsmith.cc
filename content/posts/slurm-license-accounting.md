@@ -1,5 +1,5 @@
 ---
-title: Setup Licensing with AWS ParallelCluster and Slurm
+title: Setup Licensing with AWS ParallelCluster and Slurm 🪪
 description:
 date: 2021-12-03
 tldr: Check licenses in Slurm before starting compute instances.
