@@ -30,3 +30,7 @@ Slides from various talks:
 [![Scaling NWP workloads on AWS NZRSE Talk](slides/aws-nwp.png)](slides/aws-nwp.pdf)
 
 [Timothy Brown](https://www.linkedin.com/in/timothy-p-brown) and myself gave a talk at [NZRSE 2022](https://www.rseconference.nz/) titled "Scaling NWP workloads on AWS to achieve your research goals".
+
+# [AWS Batch Deep Dive](slides/aws-batch.pdf)
+
+[![AWS Batch Deep Dive](slides/aws-batch.png)](slides/aws-batch.pdf)
