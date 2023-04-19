@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Setup a License Server with FlexLM
+
+Parameters:
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+  InstanceType:
+    Description: "Specify the Instance type - defaults to t3.micro."
+    Type: String
+    Default: t3.micro
+  AmiID:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Description: "The ID of the AMI."
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
+Resources:
+  FlexLMInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref AmiID
+      SubnetId: !Ref SubnetId
+      InstanceType: !Ref InstanceType
+      DisableApiTermination: True
+      Tags:
+        - Key : "Name"
+          Value : "FlexLM License Server"
+
+  FlexLMSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security Group for FlexLM Instance
+      GroupName: FlexLMSecurityGroup
+  
+  FlexLMIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      InstanceId: !Ref FlexLMInstance
+
+Outputs:
+  IpAddress:
+    Value: !Ref FlexLMIP
+    Description: Instance ID of the FlexLM instance
+  InstanceId:
+    Value: !Ref FlexLMInstance
+    Description: Instance ID of the FlexLM instance
