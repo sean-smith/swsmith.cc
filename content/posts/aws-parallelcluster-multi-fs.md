@@ -1,5 +1,5 @@
 ---
-title: Mount Additional EFS/FSx Lustre Filesystems in AWS ParallelCluster
+title: Mount Additional EFS/FSx Lustre Filesystems in AWS ParallelCluster 🗂️
 description:
 date: 2021-09-22
 tldr: Mount multiple filesystems on the same AWS ParallelCluster cluster.

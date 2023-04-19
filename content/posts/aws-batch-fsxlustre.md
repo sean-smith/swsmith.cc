@@ -1,5 +1,5 @@
 ---
-title: Mount FSx Lustre on AWS Batch
+title: Mount FSx Lustre on AWS Batch ⚓️
 description:
 date: 2022-04-30
 tldr: Mount FSx Lustre on AWS Batch

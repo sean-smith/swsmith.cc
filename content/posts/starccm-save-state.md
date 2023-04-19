@@ -1,5 +1,5 @@
 ---
-title: Save StarCCM+ State in AWS ParallelCluster
+title: Save StarCCM+ State in AWS ParallelCluster 🛟
 description:
 date: 2022-07-06
 tldr: Save state of a StarCCM+ run before it gets terminated
