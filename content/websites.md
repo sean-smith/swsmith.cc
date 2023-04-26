@@ -25,12 +25,6 @@ Blog that I built completely from HTML + CSS.
 
 [![Blog](/img/websites/blog.seanssmith.net.png)](https://blog.seanssmith.net)
 
-# [nars.cc](https://nars.cc)
-
-Website I built for my friend Nars 👨🏻‍💻
-
-[![Nars](/img/websites/nars.cc.png)](https://nars.cc)
-
 # [Chrome Shortcuts](https://sean-smith.github.io/chromeshortcuts/index.html)
 
 Chrome extension that grew to > 1K Monthly Active Users, even inspired a [copy cat](posts/chrome-shortcuts.html)
