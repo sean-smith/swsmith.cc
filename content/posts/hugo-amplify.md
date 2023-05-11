@@ -14,7 +14,13 @@ tags: [aws, hugo, amplify]
 </p>
 {{< /rawhtml >}}
 
-It should be no secret that I ♥️ Hugo and Amplify. Combined I've built out nearly a dozen websites using these tools, including [hpcworkshops.com](https://www.hpcworkshops.com/), [pcluster.cloud](https://pcluster.cloud), [thefiftyproject.com](https://thefiftyproject.com/) and of course this website. These websites are hosted on AWS Amplify for a grand total of $.30/month with no server maintenance ever needed. Deployments are done using Github actions and new changes are automatically built and published when new commits are pushed to Github. Oh and all of this takes about 30 mins to setup, including TLS (https) certificates and Github integration. Need I say more?
+It should be no secret that I ♥️ Hugo and Amplify. Combined I've built out nearly a dozen websites using these tools, including [hpcworkshops.com](https://www.hpcworkshops.com/), [pcluster.cloud](https://pcluster.cloud), [thefiftyproject.com](https://thefiftyproject.com/) and of course this website. These websites are hosted on AWS Amplify for a grand total of $.30/month with no server maintenance ever needed. Deployments are done using Github actions and new changes are automatically built and published when new commits are pushed to Github. Oh and all of this takes about 30 mins to setup, including TLS (https) certificates and Github integration. Need I say more? Proof of how cheap it is:
+
+{{< rawhtml >}}
+<p align="center">
+    <img src='/img/hugo-amplify/billing.png' alt='Yes really its $.30' style='border: 0px; width:600px;' />
+</p>
+{{< /rawhtml >}}
 
 There's three parts to the setup:
 
