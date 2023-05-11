@@ -16,6 +16,14 @@ tags: [aws, hugo, amplify]
 
 It should be no secret that I ♥️ Hugo and Amplify. Combined I've built out nearly a dozen websites using these tools, including [hpcworkshops.com](https://www.hpcworkshops.com/), [pcluster.cloud](https://pcluster.cloud), [thefiftyproject.com](https://thefiftyproject.com/) and of course this website. These websites are hosted on AWS Amplify for a grand total of $.30/month with no server maintenance ever needed. Deployments are done using Github actions and new changes are automatically built and published when new commits are pushed to Github. Oh and all of this takes about 30 mins to setup, including TLS (https) certificates and Github integration. Need I say more?
 
+There's three parts to the setup:
+
+1. Setup Hugo - this includes selecting the [theme](https://themes.gohugo.io/) and making sure the site builds locally.
+2. Setup Amplify and Github - this hosts the website publicly and pulls any changes from Github
+3. Setup Custom Domain - this ensures your website is hosted with your own domain including TLS (https)
+
+Ok! let's get started.
+
 ## Hugo Setup
 
 1. First install hugo, on a mac you can do:
@@ -89,3 +97,30 @@ In the next section we'll show you how to host your website with AWS Amplify so 
 4. Next click **Review** and then **Save and deploy**
 
 5. After a little bit your website will be available at a url like: `https://main.d1m7bkiki6tdw1.amplifyapp.com`
+
+    In the next section we'll show you how to setup a custom domain and TLS (https) certificate.
+
+## Setup Custom Domain
+
+1. Go to **Domain management** > **Add domain** on the left hand side of Amplify.
+
+2. Type the domain you own, if you need to register a domain, I suggest using [Namecheap](https://namecheap.com/). I've been using them for 8 years and have had no problems. Click Configure domain, then save.
+
+3. Next you'll need to verify the domain in order to get a TLS certificate. To do this you can either use email verification or DNS verification. I usually use email verification and have found it to be a bit simpler. Make sure you have email forwarding setup with your domain registrar, for namecheap I set this up like so:
+
+    ![DNS Email forwarding](/img/hugo-amplify/dns-email.png)
+
+    You'll then receive an email from `no-reply@certificates.amazon.com` that looks like:
+
+    ![DNS Email forwarding](/img/hugo-amplify/dns-email-verify.png)
+
+    Click on the link at the bottom to verify you own that domain.
+
+2. After that you'll need to setup the DNS records. The first record (CNAME) is if you wanted to use DNS verification instead of email verification, the second record is what sets up the domain to point to your amplify distribution. ANAME is just fancy way of specifying a CNAME record that points to the root (i.e. `@`) domain. If you don't have ANAME as a option, just use CNAME. You'll get the exact records for your domain from Amplify, the following are just examples:
+
+    | DNS Record                        | Type  | Value                                                             |
+    |-----------------------------------|-------|-------------------------------------------------------------------|
+    | _5137353d51f71ff95b58784d3e90db9a | CNAME | _1b13cb0a6a0d9e116eb58afe63b86aea.rdnyqppgxp.acm-validations.aws. |
+    | @                                 | ANAME | d2m437qjvig5d8.cloudfront.net                                     |
+
+    After about 5 minutes you should be able to visit your domain using https and see the same content you saw on the ugly amplify url, i.e. `https://example.com` is the same as `https://main.d1m7bkiki6tdw1.amplifyapp.com`.
