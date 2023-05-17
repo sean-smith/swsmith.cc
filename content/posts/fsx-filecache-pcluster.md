@@ -88,6 +88,8 @@ Like FSx Lustre, FileCache has the notion of Data Repository Associations (DRA).
 
 2. SSH into the HeadNode and create a script `mount-filecache.sh` with the following content:
 
+    > Note on Lustre client version: Lustre client version `2.12` is required for filecache metadata lazy load to work. This requires kernel version `> 5.10` which is in the latest Amazon Linux 2 AMI. It's upgraded in the script below by running `sudo yum install -y lustre-client`. You can check version compatibility here: https://docs.aws.amazon.com/fsx/latest/LustreGuide/install-lustre-client.html#lustre-client-amazon-linux#lustre-client-matrix.
+
     ```bash
     #!/bin/bash
 
@@ -102,6 +104,9 @@ Like FSx Lustre, FileCache has the notion of Data Repository Associations (DRA).
     # create a directory
     mkdir -p ${MOUNT_DIR}
 
+    # upgrade lustre version
+    sudo yum install -y lustre-client
+
     # mount on head node
     sudo mount -t lustre -o relatime,flock ${FSX_DNS} ${MOUNT_DIR}
 
@@ -111,6 +116,10 @@ Like FSx Lustre, FileCache has the notion of Data Repository Associations (DRA).
     if mount | /bin/grep -q ${MOUNT_DIR} ; then
     exit 0
     else
+
+    # upgrade lustre version
+    sudo yum install -y lustre-client
+
     # create a directory
     sudo mkdir -p ${MOUNT_DIR}
 
