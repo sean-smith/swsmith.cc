@@ -1,22 +1,28 @@
 ---
-title: Setup FSx FileCache with AWS ParallelCluster 🗂
+title: Setup Amazon File Cache with AWS ParallelCluster 🗂
 description:
 date: 2022-10-24
-tldr: access on-prem files easily from AWS ParallelCluster with FSx File Cache
+tldr: access on-prem files easily from AWS ParallelCluster with Amazon File Cache
 draft: false
 og_image: /img/filecache/logo.jpg
-tags: [fsx lustre, AWS ParallelCluster, hpc, s3, aws]
+tags: [amazon file cache, fsx lustre, AWS ParallelCluster, hpc, s3, aws]
 ---
 
-![Amazon Filecache logo](/img/filecache/logo.jpg)
+![Amazon File Cache logo](/img/filecache/logo.jpg)
 
-[Amazon FSx File Cache](https://aws.amazon.com/about-aws/whats-new/2022/09/amazon-file-cache-generally-available/) is a new service that provides a cache to use on-prem data in the cloud but it has a few advantages over SCP/SFTP and Datasync.
+[Amazon File Cache](https://aws.amazon.com/about-aws/whats-new/2022/09/amazon-file-cache-generally-available/) is a new service that provides a cache to use on-prem data in the cloud but it has a few advantages over SCP/SFTP and Datasync.
 
 * Single namespace - files & metadata are copied up and down transparently to the user
 * Support for S3 and NFSv3 (Not NFSv4 as of this writing)
 * Lazy Loading - files are pulled in as needed, resulting in a smaller overall cache size
 
-So when should you not use File Cache?
+## So when should you **use** File Cache?
+
+ * Running a hybrid HPC workload when the data is in an on-premises NFS (NFSv3) file system
+ * When you need to cache an S3 bucket/prefix that contains billions of objects
+ * **Cross region** bucket access where you want to automatically import and export data from the S3 bucket
+
+## So when shouldn't you use File Cache?
 
 * Syncing data from a S3 Bucket in the same region - Just use FSx Lustre, it's 1/2 the cost.
 * Syncing from a non-NFS source filesystem - use [datasync](https://aws.amazon.com/datasync/) or [transfer family](https://aws.amazon.com/aws-transfer-family/).
@@ -39,11 +45,11 @@ Since File Cache is built on the popular Lustre client, it requires no extra ins
 
 1. Create a new Security Group by going to [Security Groups](https://console.aws.amazon.com/ec2/v2/home?#SecurityGroups:) > **Create Security Group**:
 
-    * **Name** `FSx File Cache`
-    * **Description** `Allow FSx File Cache to mount to ParallelCluster`
+    * **Name** `Amazon File Cache`
+    * **Description** `Allow Amazon File Cache to mount to ParallelCluster`
     * **VPC** `Same as pcluster vpc`
 
-    ![FSx Filecache setup](/img/filecache/sg-setup.jpeg)
+    ![Amazon File Cache setup](/img/filecache/sg-setup.jpeg)
 
 2. Create a new **Inbound Rule**
 
@@ -57,9 +63,9 @@ Since File Cache is built on the popular Lustre client, it requires no extra ins
 
     ![image](https://user-images.githubusercontent.com/5545980/151907435-2720da9c-a536-46b4-a8c1-4151e4e13098.png)
 
-## 2. Create FSx File Cache
+## 2. Create Amazon File Cache
 
-1. Go to the [FSx Lustre Console](https://console.aws.amazon.com/fsx/home?#fc/file-caches) and click **Create Cache**.
+1. Go to the [Amazon Console](https://console.aws.amazon.com/fsx/home?#fc/file-caches) and click **Create Cache**.
 2. Next give it a name and set the size, (smallest is `1.2TB`)
 
     ![Setup Details](/img/filecache/setup-details.png)
@@ -70,7 +76,7 @@ Since File Cache is built on the popular Lustre client, it requires no extra ins
 
 ## 4. Create a Data Repository Association
 
-Like FSx Lustre, FileCache has the notion of Data Repository Associations (DRA). This allows you to link either an S3 bucket in another region or a NFSv3 based filesystem. All the metadata will be imported automatically and files will be lazy loaded into the cache.
+Like FSx Lustre, File Cache has the notion of Data Repository Associations (DRA). This allows you to link either an S3 bucket in another region or a NFSv3 based filesystem. All the metadata will be imported automatically and files will be lazy loaded into the cache.
 
 1. Create your DRA like so:
 
@@ -78,9 +84,9 @@ Like FSx Lustre, FileCache has the notion of Data Repository Associations (DRA).
 
 2. On the next screen review all the information and click "Create".
 
-## 5. Attach Filesystem to AWS ParallelCluster
+## 5. Attach Cache to AWS ParallelCluster
 
-1. After the cache has finished creating, grab the mount command from the FSx console:
+1. After the cache has finished creating, grab the mount command from the Amazon console:
 
     ![Mount Command](/img/filecache/mount.png)
 
