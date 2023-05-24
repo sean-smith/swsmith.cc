@@ -20,7 +20,7 @@ tags: [amazon file cache, fsx lustre, AWS ParallelCluster, hpc, s3, aws]
 
  * Running a hybrid HPC workload when the data is in an on-premises NFS (NFSv3) file system
  * When you need to cache an S3 bucket/prefix that contains billions of objects
- * **Cross region** bucket access where you want to automatically import and export data from the S3 bucket
+ * **Cross region** import and export data from S3 into the cache
 
 ## So when shouldn't you use File Cache?
 
