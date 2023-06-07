@@ -77,7 +77,15 @@ You can also track resources based on custom tags, such as **user**, **job id**,
         AdditionalIamPolicies:
             - Policy: arn:aws:iam::822857487308:policy/pclustertagging
     ```
-3. Update the cluster to apply this new policy.
+
+2. Finally we'll change the [ScaleDownIdleTime](https://docs.aws.amazon.com/parallelcluster/latest/ug/Scheduling-v3.html#yaml-Scheduling-SlurmSettings-ScaledownIdletime) parameter to `1`. This helps ensure that each job gets a dedicated instance provisioned to it and doesn't re-use an existing instance. Tagging will only work if each job is assigned a unique instance, cost-explorer doesn't split instance runtime based on when the tag was updated, it'll count the whole instance runtime to the **last** tag applied.
+
+    ```yaml
+    SlurmSettings:
+        ScaledownIdletime: 1
+    ```
+
+3. Update the cluster to apply these changes.
 4. Next we'll create a [Slurm Prolog](https://slurm.schedmd.com/prolog_epilog.html) script to automatically tag instances prior to job launch:
 
     ```bash
