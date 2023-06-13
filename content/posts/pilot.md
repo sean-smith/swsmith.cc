@@ -3,7 +3,7 @@ title: How to Become a Pilot ✈️
 description: 
 date: 2023-06-08
 tldr: Make friends, have fun, gain skills.
-draft: true
+draft: false
 og_image: /img/pilot/me.jpg
 tags: [aviation]
 ---
