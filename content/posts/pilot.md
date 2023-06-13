@@ -25,11 +25,12 @@ So how do you become a pilot? There's the official requirements from the FAA:
 
 But what does this mean for you? how do you log hours? - how do you start this process? I've broken it down to the following 4 steps:
 
-1. Find a Flight School
-2. Find a great flight instructor and communicate
-3. Commit to a regular cadence
-4. Sign-up for a Ground School
-5. Things you'll need to buy
+1. [Find a Flight School](#1-find-a-flight-school)
+2. [Get a FAA Medical](#2-get-a-faa-medical)
+3. [Find a great flight instructor](#3-find-a-great-flight-instructor-and-communicate)
+4. [Commit to a regular cadence](#4-commit-to-a-regular-cadence)
+5. [Sign-up for a Ground School](#5-sign-up-for-a-ground-school)
+6. [Things you'll need to buy](#6-things-to-buy)
 
 ## 1. Find a Flight School
 
@@ -62,7 +63,17 @@ When asking about availability ask to get added to their scheduling system. Good
 
 Your next step is to book what's called a discovery flight. This is a 1 hr flight where you go up with an instructor and see if flying is for you. Often flight schools will discount this flight so take advantage of that if they offer it.
 
-## 2. Find a great flight instructor and communicate
+## 2. Get a FAA Medical
+
+In order to be able to fly an airplane solo (aka no instructor) you'll need a FAA Medical. I recommend getting this shortly after starting to fly. This way if you find out you have a medical condition that prevents you flying you can stop before spending too much money and time. This is an exam similar to an annual physical however it's with an Aviation Medical Examiner (AME). They check your heart, vision (with glasses if you wear them), check your urine (for diabetes not drugs!) and your hearing. 
+
+Ask your flight school for a recommendation to a local AME and schedule an appointment. **Importantly** don't treat this like a regular doctor's appointment and share everything that ails you. Keep the FAA and AME on a need to know basis. If it doesn't impair your ability to fly an airplane then it's not a need to know. I've heard plenty of stories about folks who had seizures as children (and haven't had any for decades) but who declared this on the medical history form and were denied a medical.
+
+Typical cost is $120-$150 and your medical is valid for 5 years if you're under 40, 2 if over.
+
+Once you have a medical scheduled, create an account on [FAA MedExpress](https://medxpress.faa.gov/medxpress/) and fill out the form. Remember my note on what to disclose above.
+
+## 3. Find a great flight instructor and communicate
 
 ![Flight Instructor](/img/pilot/instructor.jpg)
 
@@ -72,7 +83,7 @@ At this point you might be extremely happy with the instruction or disappointed.
 
 Be sure to communicate - my biggest pet peeve when learning was when the instructor took the controls away from me or corrected me from the other set of controls. I eventually found an instructor who let me do 99% of the flying and only intervened if there was something safety critical that I missed. This allowed me to make lots of mistakes and it's how I learn.
 
-## 3. Commit to a regular cadence
+## 4. Commit to a regular cadence
 
 The biggest mistake students make is they schedule their lessons ad-hoc whenever they feel like it. Imagine you're on a sports team and the coach says "for this season we have no regular practice schedule, we'll just schedule practices ad-hoc when it's convenient and the weather is good.". You already know how poorly that would go for the sports team so why think it would go any better when you're training to learn to fly. 
 
@@ -86,7 +97,7 @@ Here's what a typical first couple of lessons looks like:
 
 As you can see if you fly twice a week and fly roughly 3 hours a week, it'll take 14 weeks before you have the minimum number of hours required to take the exam. In practice with weather and personal delays, it's often closer to 6-9 months.
 
-## 4. Sign-up for a Ground School
+## 5. Sign-up for a Ground School
 
 Part of learning to fly is learning all the systems of the airplane, airspace and regulations. This can be taught by your flight instructor in a one on one setting but it would be a very ineffective and expensive way to learn. Instead I recommend you sign-up for an online ground school (like Sporty's) that teaches you at your own pace. This will prepare you for the written exam (which you take prior to taking the flight exam). 
 
@@ -94,7 +105,7 @@ Here's a referral code to sign-up on Sportys: `FLT10412`
 
 [Signup Here](https://www.sportys.com/learn-to-fly-course-private-pilot-test-prep-online-app-and-tv.html)
 
-## 4. Things to buy
+## 6. Things to buy
 
 After you've taken your discovery flight and you're committed to pursuing your license you'll need to purchase a few things. If you want to save money, just get the headset and logbook and wait on getting the iPad and ForeFlight. You can always use paper charts and in fact you **should** learn how to do things the old fashion way first.
 
