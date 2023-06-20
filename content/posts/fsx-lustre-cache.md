@@ -66,11 +66,19 @@ To achieve even greater cost savings you can combine this with Intelligent Tieri
     | -minsize      | Age in Bytes of files to consider for eviction.     |
     | -bucket       | Bucket that's linked to the filesystem.             |
 
-2. Next setup a [crontab](https://crontab.guru/) on the HeadNode to automatically evict filesystem content when you hit a certain threshold. This script runs every hour on the 00:05 and evicts files that haven't been used in 30 days that are > 2 MB in size. Feel free to customize the parameters to suit your needs.
+2. Next setup a [crontab](https://crontab.guru/) on the HeadNode to automatically evict filesystem content when you hit a certain threshold. This script runs every hour on the 00:05 and evicts files that haven't been accessed in the last 30 days (atime) and are > 2 MB in size. Feel free to customize the parameters to suit your needs.
 
     ```bash
     5 * * * * /opt/parallelcluster/shared/cache-eviction.sh -mountpath /shared -mountpoint /shared -minage 30 -minsize 2000 -bucket bucket
     ```
+
+    As a reminder, there's three different timestamps associated with a file, in the script we use **atime**:
+
+    | Time   | Description                                                                                |   |
+    |--------|--------------------------------------------------------------------------------------------|---|
+    | ctime  | The last time the file's inode was changed (e.g. permissions changed, file renamed, etc..) |   |
+    | mtime  | Last time the file's CONTENTS were changed.                                                |   |
+    | atime  | Last time the file was accessed.                                                           |   |
 
 ## Monitoring
 
