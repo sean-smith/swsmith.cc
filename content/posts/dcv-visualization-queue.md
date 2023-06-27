@@ -8,6 +8,8 @@ og_image: /img/dcv-visualization-queue/starccm.png
 tags: [dcv, aws parallelcluster, hpc, aws, slurm, starccm+]
 ---
 
+## **Note**: this has been turned into an AWS Blog! 🚀 Check it out: [Elastic DCV Queues with NICE DCV](https://aws.amazon.com/blogs/hpc/elastic-visualization-queues-with-nice-dcv-in-aws-parallelcluster/)
+
 ![StarCCM+ Visualization](/img/dcv-visualization-queue/starccm.png)
 
 # DCV Visualization Queue
