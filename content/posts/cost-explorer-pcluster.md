@@ -89,12 +89,14 @@ You can also track resources based on custom tags, such as **user**, **job id**,
 4. Next we'll create a [Slurm Prolog](https://slurm.schedmd.com/prolog_epilog.html) script to automatically tag instances prior to job launch:
 
     ```bash
-    cat << EOF > /opt/slurm/etc/prolog.sh
     #!/bin/sh
 
+    # get IMDSv2.0 token
+    TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+
     # get instance id
-    instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-    region=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | )
+    instance_id=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id)
+    region=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.region')
 
     # tag instance with job-id
     aws --region ${region} ec2 create-tags --resources ${instance_id} --tags Key=parallelcluster:job-id,Value=${SLURM_JOB_ID}
@@ -104,8 +106,13 @@ You can also track resources based on custom tags, such as **user**, **job id**,
 
     # tag instance with job name
     aws --region ${region} ec2 create-tags --resources ${instance_id} --tags Key=parallelcluster:job-name,Value=${SLURM_JOB_NAME}
+    ```
 
-    EOF
+5. Move it to the right directory and make it executable, i.e.:
+
+    ```bash
+    sudo su
+    mv prolog.sh /opt/slurm/etc/prolog.sh
     chmod 744 /opt/slurm/etc/prolog.sh
 
     echo "Prolog=/opt/slurm/etc/prolog.sh" >> /opt/slurm/etc/slurm.conf
@@ -131,3 +138,16 @@ You can also track resources based on custom tags, such as **user**, **job id**,
 4. Now when the job is launched you can run a similar query on cost explorer but get data from these tags. In the following example I added a tag `parallelcluter:project` and then used that to see aggregate project costs across all my clusters.
 
     ![Custom Tag](/img/cost-explorer/custom-tag.png)
+
+## Troubleshooting
+
+Previously the above script was written for [IMDS v1.0](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html), however when creating a cluster with ParallelCluster UI, it'll default to IMDS v2.0 causing errors in the old script. The solution is:
+
+1. First check your parallelcluster config to see if has v2.0 enforced, if so, it'll show:
+
+    ```yaml
+    Imds:
+        ImdsSupport: v2.0
+    ```
+
+2. Update the script to the version shown above, it'll have a line with `TOKEN=$(...)` if it supports IMDS v2.0.
