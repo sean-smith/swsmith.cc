@@ -1,0 +1,58 @@
+HeadNode:
+  InstanceType: c7g.xlarge
+  LocalStorage:
+    RootVolume:
+      VolumeType: gp3
+  Networking:
+    SubnetId: subnet-1234567 # public subnet
+  Iam:
+    AdditionalIamPolicies:
+      - Policy: arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+Scheduling:
+  Scheduler: slurm
+  SlurmQueues:
+    - Name: hpc7g
+      AllocationStrategy: lowest-price
+      ComputeResources:
+        - Name: hpc7g-4xlarge
+          InstanceType: hpc7g.4xlarge
+          MinCount: 0
+          MaxCount: 4
+          Efa:
+            Enabled: true
+        - Name: hpc7g-8xlarge
+          InstanceType: hpc7g.8xlarge
+          MinCount: 0
+          MaxCount: 4
+          Efa:
+            Enabled: true
+        - Name: hpc7g-16xlarge
+          InstanceType: hpc7g.16xlarge
+          MinCount: 0
+          MaxCount: 4
+          Efa:
+            Enabled: true
+      ComputeSettings:
+        LocalStorage:
+          RootVolume:
+            VolumeType: gp3
+      Networking:
+        SubnetIds:
+          - subnet-7891011 # private subnet
+        PlacementGroup:
+          Enabled: true
+Region: us-east-1
+Image:
+  Os: alinux2
+Imds:
+  ImdsSupport: v2.0
+SharedStorage:
+  - Name: FsxLustre0
+    StorageType: FsxLustre
+    MountDir: /shared
+    FsxLustreSettings:
+      DeletionPolicy: Retain
+      StorageCapacity: 1200
+      DeploymentType: PERSISTENT_2
+      PerUnitStorageThroughput: 125
+      DataCompressionType: LZ4
