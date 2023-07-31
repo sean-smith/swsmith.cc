@@ -1,5 +1,5 @@
 ---
-title: Slurm Accounting with AWS ParallelCluster
+title: Slurm Accounting with AWS ParallelCluster 📊
 description:
 date: 2022-05-24
 tldr: Setup a database to track historical job information from Slurm
@@ -7,7 +7,11 @@ draft: false
 tags: [Slurm, AWS ParallelCluster, hpc, s3, aws]
 ---
 
-![Slurm Logo](https://user-images.githubusercontent.com/5545980/170162412-752ae596-614a-4252-be60-e474f1a6726e.png)
+{{< rawhtml >}}
+<p align="center">
+    <img src='/img/slurm-accounting/slurm.png' alt='Slurm Logo' style='border: 0px;' />
+</p>
+{{< /rawhtml >}}
 
 In this tutorial we will work through setting up Slurm Accounting. This enables many features within slurm, including job resource tracking and providing a necessary building block to slurm federation.
 
@@ -17,21 +21,21 @@ The first requirement is to setup an external database that Slurm can use to sto
 
 Use the following CloudFormation Quick-Create link to create the database in your AWS account. 
 
-[![Launch](https://samdengler.github.io/cloudformation-launch-stack-button-svg/images/launch-stack.svg)](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?stackName=slurm-accounting&templateURL=https://pcluster-manager-us-east-1.s3.amazonaws.com/slurm-accounting/accounting-cluster-template.yaml)
+[![Launch](https://samdengler.github.io/cloudformation-launch-stack-button-svg/images/launch-stack.svg)](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=pcluster-slurm-db&templateURL=https://us-east-1-aws-parallelcluster.s3.amazonaws.com/templates/1-click/serverless-database.yaml)
 
 When you're creating the stack, be sure to specify the `VPC ID` and `Subnets` parameters to correspond to the VPC where you are creating the stack. All other values should be suitable as defaults, however feel free to change the database instance type depending on your workload needs.
 
 ### Note
 > Change the region in the URL to create the stack in a region separate from `us-east-1`.
 
-![CloudFormation Settings](https://user-images.githubusercontent.com/5545980/170163602-a07e3923-c088-436e-97aa-7ae76ce19750.png)
+![CloudFormation Settings](/img/slurm-accounting/database-settings.png)
 
 
 ## Step 2- Retrieve the outputs from the CloudFormation stack
 
 Once the stack has reached a Completed state. You will need to go to the `Outputs` tab of the stack and make note of the properties as they will be used in the creation of your cluster.
 
-![CloudFormation Outputs](https://user-images.githubusercontent.com/5545980/170163698-c94e1c3c-7f52-4f1f-83c5-79cdbe384d31.png)
+![CloudFormation Outputs](/img/slurm-accounting/cloudformation-output.png)
 
 ## Step 3 - Add permissions to your lambda
 
@@ -42,7 +46,7 @@ In order to allow our cluster access to secrets we need to add an additional IAM
 3. Select `Add permissions` > `Attach policies` > search for `SecretsManagerPolicy`
 4. Click `Attach policies`
 
-![Attach Policies](https://user-images.githubusercontent.com/5545980/170163910-0b15013d-f533-4a56-bac1-9b62d7705560.png)
+![Attach Policies](/img/slurm-accounting/attach-policies.jpeg)
 
 ## Step 4 - Create Your Cluster
 
@@ -54,14 +58,14 @@ Next, go to Pcluster Manager and choose the **Create** option to create a new cl
 
 Choose a suitable name for your cluster, and then in the Cluster Properties window, be sure to choose the VPC that you used when creating the slurm-accounting CloudFormation stack.
 
-![cluster-properties](https://user-images.githubusercontent.com/5545980/170163989-ff0f227a-f570-468b-9a77-66363dc50739.png)
+![cluster-properties](/img/slurm-accounting/cluster-properties.png)
 
 
 ### HeadNode Properties
 
 You will need to enable the `Virtual Console` option as that allows Pcluster Manager to interact with the cluster directly:
 
-![headnode-virtual-console](https://user-images.githubusercontent.com/5545980/170163999-c1175514-b345-4517-8f00-be08b94f4ba0.png)
+![headnode-virtual-console](/img/slurm-accounting/virtual-console.png)
 
 Be sure to also enable the Security Group referenced in the CloudFormation outputs so that the HeadNode can access the database.
 
@@ -72,7 +76,7 @@ Next we'll enable a known script that will install slurm accounting on the HeadN
 - Fill in the values for the `Secret ARN` and `RDS Endpoint` from the CloudFormation output
 - Under `IAM Policies` add the arn from the CloudFormation Stack output `SecretsManagerPolicy` so that the HeadNode can access the password to the database. Be sure to actually click `Add` so that it is added to the list.
 
-![Cluster Properties](https://user-images.githubusercontent.com/5545980/170164060-15f12aac-41bc-4652-b6ff-f052767bb73e.png)
+![Cluster Properties](/img/slurm-accounting/post-install-setup.png)
 
 ## Review Config
 
