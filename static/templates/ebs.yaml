@@ -1,0 +1,41 @@
+HeadNode:
+  InstanceType: t2.micro
+  Ssh:
+    KeyName: keypair
+  Networking:
+    SubnetId: subnet-1234567
+  LocalStorage:
+    RootVolume:
+      VolumeType: gp3
+  Iam:
+    AdditionalIamPolicies:
+      - Policy: arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+Scheduling:
+  Scheduler: slurm
+  SlurmQueues:
+    - Name: queue0
+      ComputeResources:
+        - Name: queue0-c52xlarge
+          MinCount: 0
+          MaxCount: 4
+          InstanceType: c5.2xlarge
+      Networking:
+        SubnetIds:
+          - subnet-1234567
+      ComputeSettings:
+        LocalStorage:
+          RootVolume:
+            VolumeType: gp3
+      CustomActions:
+        OnNodeConfigured:
+          Script: s3://bucket/attach_ebs.sh
+          Args:
+            - /scratch
+            - gp3
+            - '100'
+      Iam:
+        AdditionalIamPolicies:
+          - Policy: arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+Region: us-east-2
+Image:
+  Os: alinux2

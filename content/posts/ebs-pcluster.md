@@ -100,7 +100,7 @@ Let's say you want to use a an instance type that doesn't have NVME but you want
     aws s3 cp attach_ebs.sh s3://bucket/
     ```
 
-3. Create a cluster with AWS ParallelCluster and specify `attach_ebs.sh` as a [post install script](https://docs.aws.amazon.com/parallelcluster/latest/ug/custom-bootstrap-actions-v3.html).
+3. Create a cluster with AWS ParallelCluster based on [ebs.yaml](/templates/ebs.yaml) and specify `attach_ebs.sh` as a [post install script](https://docs.aws.amazon.com/parallelcluster/latest/ug/custom-bootstrap-actions-v3.html).
 
     * In addition you'll need the IAM policies `arn:aws:iam::aws:policy/AmazonEC2FullAccess` and `arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess`
 
@@ -110,49 +110,46 @@ Let's say you want to use a an instance type that doesn't have NVME but you want
 
     ```yaml
     HeadNode:
-    InstanceType: t3.micro
-    Ssh:
-        KeyName: amzn2
-    Networking:
-        SubnetId: subnet-8b15a7c6
-    LocalStorage:
-        RootVolume:
-        VolumeType: gp3
-    Iam:
-        AdditionalIamPolicies:
-        - Policy: arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
-        - Policy: arn:aws:iam::aws:policy/AmazonEC2FullAccess
-        - Policy: arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
-    Scheduling:
-    Scheduler: slurm
-    SlurmQueues:
-        - Name: queue0
-        ComputeResources:
-            - Name: queue0-t32xlarge
-            MinCount: 0
-            MaxCount: 4
-            InstanceType: t3.2xlarge
+        InstanceType: t2.micro
+        Ssh:
+            KeyName: keypair
         Networking:
-            SubnetIds:
-            - subnet-8b15a7c6
-        ComputeSettings:
-            LocalStorage:
+            SubnetId: subnet-1234567
+        LocalStorage:
             RootVolume:
-                VolumeType: gp3
-        CustomActions:
-            OnNodeConfigured:
-            Script: s3://spack-swsmith/attach_ebs.sh
-            Args:
-                - /scratch
-                - gp3
-                - '100'
+            VolumeType: gp3
         Iam:
             AdditionalIamPolicies:
-            - Policy: arn:aws:iam::aws:policy/AmazonEC2FullAccess
-            - Policy: arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+            - Policy: arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+    Scheduling:
+        Scheduler: slurm
+        SlurmQueues:
+            - Name: queue0
+            ComputeResources:
+                - Name: queue0-c52xlarge
+                MinCount: 0
+                MaxCount: 4
+                InstanceType: c5.2xlarge
+            Networking:
+                SubnetIds:
+                - subnet-1234567
+            ComputeSettings:
+                LocalStorage:
+                RootVolume:
+                    VolumeType: gp3
+            CustomActions:
+                OnNodeConfigured:
+                Script: s3://bucket/attach_ebs.sh
+                Args:
+                    - /scratch
+                    - gp3
+                    - '100'
+            Iam:
+                AdditionalIamPolicies:
+                - Policy: arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
     Region: us-east-2
     Image:
-    Os: alinux2
+        Os: alinux2
     ```
 
 ## Test
