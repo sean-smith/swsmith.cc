@@ -7,6 +7,7 @@ draft: false
 og_image: /img/hpc7g/hpc7g.jpeg
 tags: [ec2, AWS ParallelCluster, hpc, aws]
 ---
+
 {{< rawhtml >}}
 <p align="center">
     <img src='/img/hpc7g/hpc7g.jpeg' alt='HPC7g instances' style='border: 0px;' />
@@ -27,7 +28,7 @@ In the next section we'll show how to setup these instances with AWS ParallelClu
 
 ## Setup
 
-To deploy `hpc7g` instances we'll need to create a ARM-specific cluster due to a restriction in AWS ParallelCluster that each cluster needs to share the same architecture i.e. `arm64` or `x86_64`.
+To deploy `hpc7g` instances we'll need to create a ARM-specific cluster due to a restriction in AWS ParallelCluster that each cluster needs to share the same architecture i.e. `arm64` or `x86_64`. See [Multi-Cluster Mode](#slurm-multi-cluster-mode) for an example of how to link the two clusters.
 
 The next important caveat is that the HPC7g instances **can only be deployed in a private subnet in a single-AZ**, at launch that's only N. Virginia (us-east-1), `use1-az6` Availability Zone.
 
@@ -57,22 +58,26 @@ Once the cluster is `CREATE_COMPLETE` we can install [Arm Performance Libraries]
 
 1. First install Spack on the FSx Lustre filesystem following instructions [here](https://swsmith.cc/posts/spack.html#install-spack)
 
-2. we'll first install `gcc` 9.3.0 which has support for the Neoversev1 core:
+2. we'll first install [ARM Compiler for Linux (acfl)](https://community.arm.com/arm-community-blogs/b/tools-software-ides-blog/posts/arm-compiler-for-linux-and-arm-performance-libraries-22-0) which has support for the `Neoversev1` core:
 
     ```
-    spack install gcc@9.3.0
-    spack load gcc@9.3.0
+    spack install acfl
+    spack load acfl
     spack compiler find
-    spack unload gcc@9.3.0
+    spack unload acfl
     ```
 
-2. Next we'll install [armpl](https://developer.arm.com/downloads/-/arm-performance-libraries) a set of performance libraries including `BLAS`, `LAPACK`, `FFT`, ect.
+2. Next we'll install [ARM Performance Libraries (armpl)](https://developer.arm.com/downloads/-/arm-performance-libraries) a set of performance libraries including `BLAS`, `LAPACK`, `FFT`, ect.
 
     ```
     spack install armpl-gcc
     ```
 
-3. Check that it picked up on the appropriate [SVE](https://developer.arm.com/Architectures/Scalable%20Vector%20Extensions) instruction set.
+3. You'll now see a `arm` compiler when you list out compilers:
+
+    ```
+    spack compilers
+    ```
 
 ## Restricting Cores
 
@@ -116,3 +121,13 @@ L3 cache:            32768K
 NUMA node0 CPU(s):   0-15
 Flags:               fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs paca pacg dcpodp svei8mm svebf16 i8mm bf16 dgh rng
 ```
+
+## Slurm Multi-Cluster Mode
+
+Slurm supports a feature called [multi-cluster mode](https://slurm.schedmd.com/multi_cluster.html) this allows you to submit jobs across multiple clusters, making it possible to submit from the `x86` cluster to the `arm` cluster. For example, I could submit a job and specify the `aarch64` cluster with the `hpc7g` partition like so:
+
+```bash
+sbatch --cluster aarch64 ...
+```
+
+This setup of this is outside of the scope of this blogpost, but please see [Configure Slurm Multi-Cluster Mode](slurm-multi-cluster.html) for instructions.
