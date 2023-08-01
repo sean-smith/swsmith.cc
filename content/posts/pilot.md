@@ -2,7 +2,7 @@
 title: How to Become a Pilot ✈️
 description: 
 date: 2023-06-08
-tldr: Make friends, have fun, gain skills.
+tldr: Learn to fly, change your life
 draft: false
 og_image: /img/pilot/me.jpg
 tags: [aviation]
@@ -10,7 +10,7 @@ tags: [aviation]
 
 ![Me!](/img/pilot/me.jpg)
 
-Flying is the most rewarding skills you can acquire, it's the perfect mix between head knowledge and skill. You have to be able to make decisions quickly and think on your feet, in addition to being able to study complex systems, understand airspace and complex approaches. The U.S. has a phenomenal system for general aviation. As a private pilot you can basically fly anywhere, during the day, at night, through the weather (with an additional rating). You'd be surprised at how much freedom you have as a pilot. Here's a photo of me flying over the Space Needle - not talking to anyone but perfectly legally:
+Flying is the most rewarding skills you can acquire; it's the perfect mix between knowledge and skill. You have to be able to make decisions quickly and think on your feet, in addition to being able to study complex systems, understand airspace and complex approaches. The U.S. has a phenomenal system for general aviation. As a private pilot you can basically fly anywhere, during the day, at night, through the weather (with an additional rating). You'd be surprised at how much freedom you have as a pilot. Here's a photo of me flying over the Space Needle - not talking to anyone but perfectly legally:
 
 ![Fun Flying adventures](/img/pilot/aviation.jpg)
 
@@ -48,12 +48,12 @@ When asking about cost most flight schools will quote you the minimum. They'll t
 |                 | **Hours** | **Cost**    |
 |-----------------|-----------|-------------|
 | Airplane Rental | 75        | $140        |
-| Instruction*     | 65        | $65         |
+| Instruction*    | 65        | $65         |
 | Miscellaneous   |           | $200        |
 | Checkride Fee   |           | $500        |
 | **Total**       |           | **$15,425** |
 
-*Note: this will vary a lot by region, in the midwest you might pay $40/hour for instruction and in the California you'd pay closer to $100.
+*Note: this will vary a lot by region. In the midwest you might pay $40 per hour for instruction and in the California, you'd pay closer to $100 per hour.
 
 If this seems much higher than what your local flight school quotes, note that they probably only quote you 40 hours of aircraft rental and 30 hours of instruction which is all that's required. I believe the national average is 75 hours.
 
