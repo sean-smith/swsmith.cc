@@ -26,7 +26,7 @@ This also allows you to link the IAM user with their POSIX user and give users a
 
 3. On the next page select the directory you setup in **Step 1**
 
-    ![Select AD](/static/img/link-iam-to-ad/select-ad.png)
+    ![Select AD](/img/link-iam-to-ad/select-ad.png)
 
 4. Accept the scary message and proceed:
 
