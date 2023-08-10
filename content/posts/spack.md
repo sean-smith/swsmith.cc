@@ -23,7 +23,7 @@ First, on the head node - which we [connected to via SSM or DCV](https://weather
 ```bash
 export SPACK_ROOT=/shared/spack
 git clone -b v0.19.0 -c feature.manyFiles=true https://github.com/spack/spack $SPACK_ROOT
-echo "export SPACK_ROOT=/shared/spack" >> $HOME/.bashrc
+echo "export SPACK_ROOT=$SPACK_ROOT" >> $HOME/.bashrc
 echo "source \$SPACK_ROOT/share/spack/setup-env.sh" >> $HOME/.bashrc
 source $HOME/.bashrc
 ```
