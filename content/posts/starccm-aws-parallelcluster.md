@@ -51,7 +51,7 @@ In this blogpost we'll show you how to setup StarCCM+ using AWS ParallelCluster,
   ```bash
   mkdir -p ~/Desktop && cd "$_"
   wget https://swsmith.cc/img/starccm/starccm-logo.png
-  cat << EOF
+  cat << EOF > starccm.desktop
   #!/usr/bin/env xdg-open
   [Desktop Entry]
   Version=1.0
