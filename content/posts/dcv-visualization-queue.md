@@ -86,8 +86,10 @@ echo $password | sudo passwd $USER --stdin > /dev/null
 sudo systemctl start dcvserver
 dcv create-session $SLURM_JOBID
 
+# get instance ip address
+token=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+ip=$(curl -H "X-aws-ec2-metadata-token: $token" -vhttp://169.254.169.254/latest/meta-data/public-ipv4)
 
-ip=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
 printf "\e[32mClick the following URL to connect:\e[0m"
 printf "\n=> \e[34mhttps://$ip:8443?username=$USER&password=$password&session-id=$SLURM_JOB_ID\e[0m\n"
 
@@ -130,7 +132,11 @@ echo $password | sudo passwd $USER --stdin > /dev/null
 sudo systemctl start dcvserver
 dcv create-session $SLURM_JOBID
 
-instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+
+# get instance id
+token=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+ip=$(curl -H "X-aws-ec2-metadata-token: $token" -vhttp://169.254.169.254/latest/meta-data/instance-id)
+
 printf "\e[32mFor a no-ingress cluster, you'll need to run the following command (on your local machine):\e[0m"
 printf "\n=> \e[37m\taws ssm start-session --target $instance_id --document-name AWS-StartPortForwardingSession --parameters '{\"portNumber\":[\"8443\"],\"localPortNumber\":[\"8443\"]}'\e[0m\n"
 
@@ -185,7 +191,9 @@ dcv create-session $SLURM_JOBID
 
 # params
 source /etc/parallelcluster/cfnconfig
-ip=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+# get instance ip address
+token=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+ip=$(curl -H "X-aws-ec2-metadata-token: $token" -vhttp://169.254.169.254/latest/meta-data/public-ipv4)
 port=8443
 bucket=$(aws cloudformation describe-stacks --region $cfn_region --stack-name $stack_name --query "Stacks[0].Parameters[?ParameterKey=='ResourcesS3Bucket'].ParameterValue" --output text)
 
