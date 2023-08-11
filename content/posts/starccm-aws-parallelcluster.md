@@ -178,6 +178,35 @@ On the left hand side, expand the "reports" directory and click on "Total Solver
 
 # Appendix
 
+## StarCCM+ Versions
+
+StarCCM has two different versions, a "build version" and a version. Here's the mapping between them:
+
+| Build     | Version |
+|-----------|---------|
+| 14.02.010 |  2019.1 |
+| 15.02.007 |  2020.1 |
+| 15.04.007 |  2020.2 |
+| 17.06.007 |  2210   |
+| 18.04.001 |  2306   |
+
+**Note** `R8` just stands for "double precision" so if you see the version `17.06.007-R8` that's the double precision version of `17.06.007`.
+
+To see the version you have installed:
+
+```bash
+$ starccm+ -version
+Simcenter STAR-CCM+ 2020.1 Build 15.02.007 (linux-x86_64-2.12/gnu7.1-r8 Double Precision)
+```
+
+In order to see what version your sim file was created with run:
+
+```bash
+$ starccm+ -info simfile.sim
+
+STAR-CCM+ 15.02.009 (linux-x86_64-2.12/gnu7.1) Serial 781.99 MB
+```
+
 ## AWS ParallelCluster Config file
 
 ```yaml
