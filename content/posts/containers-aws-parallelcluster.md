@@ -1,11 +1,11 @@
 ---
-title: Containers with AWS ParallelCluster 🚢
+title: Containers with Slurm 🚢
 description: 
-date: 2023-05-16
-tldr: Run containers on AWS ParallelCluster
+date: 2023-08-13
+tldr: Run containers on Slurm using Pyxis and Enroot
 draft: false
 og_image: /img/containers-pcluster/NVIDIA-GPU-Docker.png
-tags: [aws parallelcluster, pyxis, aws, docker, singularity]
+tags: [aws parallelcluster, slurm, pyxis, aws, docker, singularity]
 ---
 
 {{< rawhtml >}}
@@ -103,11 +103,53 @@ Tue May 16 22:07:21 2023
 nvidia-smi
 ```
 
-## Multi-Node parallel
+## Multi-Node parallel (MPI)
 
-* Spank plugin
-* OCI containers
-* Pyxis
-* Enroot
-* Docker
-* Singularity
+Pyxis is compiled as a Slurm (Spank) plugin, this means it can read from the Slurm parameters in order to run across multiple nodes, for example we can run a MPI hello world job. To do this we'll start from a [openmpi container](https://registry.hub.docker.com/r/mfisherman/openmpi) and build the `mpi_hello_world.c` program there.
+
+1. Create a `Dockerfile` with the following contents
+
+```dockerfile
+# syntax=docker/dockerfile:1.4
+FROM mfisherman/openmpi
+
+COPY <<EOF mpi_hello_world.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+#include <unistd.h>
+
+int main(int argc, char **argv){
+  int step, node, hostlen;
+  char hostname[256];
+  hostlen = 255;
+
+  MPI_Init(&argc,&argv);
+  MPI_Comm_rank(MPI_COMM_WORLD, &node);
+  MPI_Get_processor_name(hostname, &hostlen);
+
+  for (step = 1; step < 5; step++) {
+    printf("Hello World from Step %d on Node %d, (%s)\n", step, node, hostname);
+    sleep(2);
+  }
+
+ MPI_Finalize();
+}
+EOF
+
+RUN mpicc mpi_hello_world.c -o mpi_hello_world
+```
+
+2. Create the docker image and import it with enroot:
+
+```bash
+export DOCKER_BUILDKIT=1
+docker build -t mpi-hello-world .
+enroot import dockerd://mpi-hello-world:latest
+```
+
+3. Run the image with Slurm using the `srun` command:
+
+```bash
+srun -n 4 --container-image=./mpi-hello-world+latest.sqsh mpirun ./mpi_hello_world
+```
