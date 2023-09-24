@@ -13,6 +13,7 @@ I started flying in 2017 and since I've accumulated well over 1,000 hours of tot
 {{< rawhtml >}}
 <p align="center">
     <img src='/img/sean.jpg' alt='Sean Flying' style='border: 0px;' width='200px' />
+    <img src='/img/about/mooney.jpg' alt='Sean Flying' style='border: 0px;' width='200px' />
 </p>
 {{< /rawhtml >}}
 
@@ -24,17 +25,22 @@ The trip took 31 days and in addition to landing in each state we also ran a mil
 
 ## Running 🏃🏻‍♂️
 
-I'm an avid runner, I completed my first marathon at age 15 and haven't stopped running since. I've completed numerous ultra-marathon races including Canyons 100M, Oregon Cascades 100, and a bunch of shorter races. My current goal is to qualify for [UTMB](https://montblanc.utmb.world/races/UTMB). 
+I'm an avid runner, I completed my first marathon at age 15 and haven't stopped running since. I've completed numerous ultra-marathon races including Canyons 100M, Oregon Cascades 100M, [UTMB](https://montblanc.utmb.world/races/UTMB) and a bunch of shorter races. My current goal is to qualify for Hardrock 100. 
 
 {{< rawhtml >}}
 <p align="center">
-    <img src='/img/about/running.jpg' alt='Sean Running' style='border: 0px;' width='200px' />
+    <img src='/img/about/running.jpg' alt='Sean Running' style='border: 0px;' height='300px' />
+    <img src='/img/about/utmb.jpg' alt='Sean Running' style='border: 0px;' height='300px' />
 </p>
 {{< /rawhtml >}}
 
 ## College 🏫
 
 I completed my BA and MS in Computer Science in 4 years at Boston University. I gave the commencement address for the computer science department in 2017. You can watch it [here](https://www.youtube.com/watch?v=WSu6I3GqN-Y). I was the head of a on-campus maker-space, [BUILDS](https://builds.cc/) for 2 years. In addition I taught as a TA for Network Security (CS558), Data Structures and Algorithms (CS112), and Computer Systems (CS210) at Boston University.
+
+{{< rawhtml >}}
+<iframe width="560" height="315" src="https://www.youtube.com/embed/WSu6I3GqN-Y?si=fwEdiCjpqhRW1A-e" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+{{< /rawhtml >}}
 
 ## People who inspire me 😎
 
