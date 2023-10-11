@@ -32,6 +32,8 @@ So what are the downsides?
     # Usage:
     # ./s3-mountpoint.sh /shared mybucket
 
+    source /etc/parallelcluster/cfnconfig
+
     # Install S3 Mountpoint if it's not installed
     if [ ! -x "$(which mount-s3)" ]; then
         sudo yum install -y fuse fuse-devel cmake3 clang-devel
@@ -43,14 +45,16 @@ So what are the downsides?
     fi
 
     # get network throughput from ec2 instance
-    instance_type=$(curl -s http://169.254.169.254/latest/meta-data/instance-type)
-    region=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region|awk -F\" '{print $4}')
-    network=$(aws ec2 --region ${region} describe-instance-types --instance-types ${instance_type} --query "InstanceTypes[].[NetworkInfo.NetworkPerformance]" --output text | grep -o '[0-9]\+')
+    token=$(curl -sX PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+    instance_type=$(curl -sH "X-aws-ec2-metadata-token: $token" http://169.254.169.254/latest/meta-data/instance-type)
+    region=$(curl -sH "X-aws-ec2-metadata-token: $token" http://169.254.169.254/latest/dynamic/instance-identity/document | grep region|awk -F\" '{print $4}')
+    network=$(aws ec2 --region ${region} describe-instance-types --instance-types ${instance_type} --query "InstanceTypes[].[NetworkInfo.NetworkPerformance]" --output text | grep -o '[0-9]\+' | head -n 1)
 
     # Mount S3 Bucket
     mkdir -p ${1}
+    echo "Network Performance: [${network}]"
     chown $cfn_cluster_user:$cfn_cluster_user ${1}
-    mount-s3 --throughput-target-gbps ${network} ${2} ${1}
+    mount-s3 --maximum-throughput-gbps ${network} ${2} ${1}
     ```
 
 1. Setup a cluster with the following [s3-mountpoint.yaml](/static/templates/s3-mountpoint.yaml) config file:
