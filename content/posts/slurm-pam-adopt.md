@@ -16,10 +16,11 @@ In the next section we'll setup Slurm PAM Adopt:
 
 ## Setup
 
-1. Either clone and configure or navigate to the folder with the Slurm source, this might be `/opt/slurm` or `/admin/slurm/22.05.5`, this is where we'll compile the pam adopt module:
+1. Either clone and configure or navigate to the folder with the Slurm source, this might be `/opt/slurm` or `/admin/slurm/22.05.5`, this is where we'll compile the pam adopt module. Make sure the version of slurm corresponds to the version installed on the system i.e. `squeue --version` should match the `SLURM_VERSION` environment variable. You can find the slurm version tags [here](https://github.com/SchedMD/slurm/tags).
 
     ```bash
-    git clone https://github.com/SchedMD/slurm.git
+    SLURM_VERSION=slurm-23-02-4-1
+    git clone -b ${SLURM_VERSION} https://github.com/SchedMD/slurm.git
     cd slurm/
     ./configure --prefix=/opt/slurm --with-pmix=/opt/pmix --with-jwt=/opt/libjwt --enable-slurmrestd
     cd contribs/pam_slurm_adopt/
