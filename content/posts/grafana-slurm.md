@@ -1,238 +1,364 @@
 ---
-title: Visualize Cluster Statistics with Grafana 📊
+title: GPU Monitoring with Grafana 📊
 description:
-date: 2023-08-02
-tldr: Using Slurm Prometheus Exporter and Grafana you can setup custom dashboards to monitor your Slurm cluster
-draft: true
+date: 2023-10-26
+tldr: Using Grafana you can setup custom dashboards to monitor your Slurm cluster including stats like number of jobs running, gpu utilization, memory consumption, efa traffic ect.
 og_image: /img/grafana/grafana.png
 tags: [grafana, slurm, aws]
 ---
 
 ![Grafana Screenshot](/img/grafana/grafana.png)
 
-Grafana is an open source tool that allows us to create dashboards and monitor the cluster. In the following guide we'll show you how to setup prometheus Slurm exporter and Grafana to monitor a cluster. This will help you answer questions like:
+Grafana is an open source tool that allows us to create dashboards and monitor our cluster. In the following guide we'll show you how to setup [Grafana](https://grafana.com/), [Prometheus](https://prometheus.io/), [Slurm exporter](https://github.com/vpenso/prometheus-slurm-exporter) and [DCGM Exporter](https://github.com/NVIDIA/dcgm-exporter) to monitor a cluster. This will help you answer questions like:
 
-* how many jobs are running
-* instance utilization
-* number of instances running
+* how many jobs/instances are running
+* CPU utilization
+* GPU Utilization
+* Memory usage
+* EFA (Network) Traffic
+* Disk iops
 
-## Setup a Security Group to access Grafana
+We'll setup the following exporters but don't limit yourself to just these. There's thousands of useful Prometheus exporters that can be plugged into this same architecture.
 
-To access the Grafana portal you'll need to either create a security group or have users setup [SSM Port Forwarding](https://aws.amazon.com/blogs/aws/new-port-forwarding-using-aws-system-manager-sessions-manager/) and run a command locally.
+| Prometheus Exporter       | Description              |
+|---------------------------|--------------------------|
+| [Slurm Prometheus Exporter](https://github.com/vpenso/prometheus-slurm-exporter) | Slurm scheduler metrics such as number of jobs, instances in DOWN state, number of users ect. |
+| [DCGM Metrics](https://github.com/NVIDIA/dcgm-exporter)              | GPU Metrics              |
+| [EFA Exporter](https://tdb)              | EFA traffic metrics such as packets sent and received.     |
+| [Node Exporter](https://github.com/prometheus/node_exporter)             | General instance information such as CPU Utilization, memory utilization, ect. |
 
-**Option 1: Security Group**
+In the following sections we set this up for AWS ParallelCluster, however the same steps apply to any Slurm based cluster.
 
-1. First [create a security group](https://console.aws.amazon.com/ec2/home?#CreateSecurityGroup:) that allows you to access port `3000` from the HeadNode. For test purposes I used `0.0.0.0/0` but I highly recommend you restrict this CIDR range to your corporate network or use port forwarding.
+## Setup Cluster
 
-  ![Security Group Setup](/img/grafana/security-group.png)
+The first step is to setup a cluster with AWS ParallelCluster, to aide in this process you can use the following template:
 
-**Option 2: SSM Port Forwarding**
+[Template 🚀](/templates/grafana-slurm.yaml)
 
-1. To use Port Forwarding the HeadNode will need to have the `arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore` policy added to the instance profile. Then you can do:
+If you're unfamiliar with AWS ParallelCluster and want more context, see [my workshop](https://www.mlworkshops.com/03-cluster.html).
 
-  ```bash
-  INSTANCE=i-1234567890
-  REGION=us-east-1
-  aws ssm start-session --target $INSTANCE_ID \
-      --document-name AWS-StartPortForwardingSession \
-      --parameters '{"portNumber":["3000"],"localPortNumber":["3000"]}' \
-      --region $REGION
-  ```
+If you don't want to use the linked template make sure you include the policy `arn:aws:iam::aws:policy/AmazonPrometheusFullAccess` in the [AdditionalIamPolicies](https://docs.aws.amazon.com/parallelcluster/latest/ug/HeadNode-v3.html#yaml-HeadNode-Iam-AdditionalIamPolicies) section of the HeadNode and Compute Nodes like so:
 
-2. Then connect to `http://localhost:3000` instead of the HeadNode's ip address when you setup Grafana below.
+```yaml
+Iam:
+  AdditionalIamPolicies:
+    - arn:aws:iam::aws:policy/AmazonPrometheusFullAccess
+```
+
+## Setup Grafana
+
+In this step we'll setup [Amazon Managed Grafana](https://aws.amazon.com/grafana/), this is a hosted version of Grafana that will plot metrics collected from Amazon Prometheus and Cloudwatch.
+
+1. First navigate to the [Grafana Console](https://us-east-1.console.aws.amazon.com/grafana/home?region=us-east-1) > click **Create**.
+
+2. Next give it a name like *aws-parallelcluster*
+
+	![Grafana Setup](/img/grafana/grafana-1.png)
+
+3. On the next screen select the following options:
+
+	* Select **IAM Identity Center** as the authentication access
+	* Click **Create User**
+
+	![Grafana Setup](/img/grafana/grafana-2.png)
+
+4. Next enter a valid **email** as well as **First name** and **Last name**
+
+	![Grafana Setup](/img/grafana/user.png)
+
+5. Enable the following two data sources
+
+	* Select **Amazon Managed Service for Prometheus**
+	* Select **Amazon CloudWatch** 
+
+	![Grafana Setup](/img/grafana/grafana-3.png)
+
+6. On the next screen click **Create Workspace**
+
+7. After the workshop creates click on the login link to sign in. It'll look something like `https://g-4831a3dc3d.grafana-workspace.us-east-1.amazonaws.com/`. You should have received an email with a password, enter that and your email to connect:
+
+	![Grafana home](/img/grafana/grafana_home.png)
+
+Congrats! you just created a managed Grafana Workspace. In the next section we'll setup Prometheus, a time series database that'll act as the data store for everything we want to graph on Grafana.
 
 ## Setup Prometheus
 
-1. Install Prometheus from the [latest version](https://prometheus.io/download/) on Github.
+In this step we'll setup Prometheus using [Amazon Managed Prometheus (AMP)](https://us-east-1.console.aws.amazon.com/prometheus/home?region=us-east-1) a fully managed, serverless prometheus.
 
-```bash
+1. Create prometheus workspace using the *AWS CLI*
+
+	```bash
+	export AWS_DEFAULT_REGION=us-east-1
+	WORKSPACE_ID=$(sudo aws amp create-workspace --region $AWS_DEFAULT_REGION --alias aws-parallelcluster --query workspaceId)
+	echo $WORKSPACE_ID
+	echo "export WORKSPACE_ID=$WORKSPACE_ID" >> ~/.bashrc
+	echo "export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION" >> ~/.bashrc
+	```
+
+2. Install prometheus server and setup a config file:
+
+	```bash
+	wget https://github.com/prometheus/prometheus/releases/download/v2.47.0/prometheus-2.47.0.linux-arm64.tar.gz
+	tar xvfz prometheus-*.tar.gz
+	cd prometheus-*
+	sudo mv prometheus /usr/bin/
+	sudo mv promtool /usr/bin/
+	```
+​
+3. Create a prometheus config file, make sure that `AWS_DEFAULT_REGION` and `WORKSPACE_ID` are set.
+
+```
+echo "WORKSPACE_ID: ${WORKSPACE_ID}"
+echo "AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}"
+
+cat > prometheus.yml << EOF
+global:
+scrape_interval: 15s
+evaluation_interval: 15s
+scrape_timeout: 15s
+
+scrape_configs:
+- job_name: 'slurm_exporter'
+	scrape_interval:  30s
+	scrape_timeout:   30s
+	static_configs:
+	- targets: ['localhost:8080']
+
+- job_name: 'ec2_instances'
+	scrape_interval: 5s
+	ec2_sd_configs:
+	- port: 9100
+		region: ${AWS_DEFAULT_REGION}
+		refresh_interval: 10s
+	- port: 9400
+		region: ${AWS_DEFAULT_REGION}
+		refresh_interval: 10s
+		filters:
+		- name: instance-state-name
+			values:
+			- running
+		- name: tag:Name
+			values:
+			- Compute
+		- name: instance-type
+			values:
+			- p2.xlarge
+			- p2.8xlarge
+			- p2.16xlarge
+			- p3.2xlarge
+			- p3.8xlarge
+			- p3.16xlarge
+			- p3dn.24xlarge
+			- p4d.24xlarge
+			- g3s.xlarge
+			- g3.4xlarge
+			- g3.8xlarge
+			- g3.16xlarge
+			- g4dn.xlarge
+			- g4dn.2xlarge
+			- g4dn.4xlarge
+			- g4dn.8xlarge
+			- g4dn.16xlarge
+			- g4dn.12xlarge
+			- g4dn.metal
+	relabel_configs:
+	- source_labels: [__meta_ec2_tag_Name]
+		target_label: instance_name
+	- source_labels: [__meta_ec2_tag_Application]
+		target_label: instance_grafana
+	- source_labels: [__meta_ec2_instance_id]
+		target_label: instance_id
+	- source_labels: [__meta_ec2_availability_zone]
+		target_label: instance_az
+	- source_labels: [__meta_ec2_instance_state]
+		target_label: instance_state
+	- source_labels: [__meta_ec2_instance_type]
+		target_label: instance_type
+	- source_labels: [__meta_ec2_vpc_id]
+		target_label: instance_vpc
+
+remote_write:
+- url: https://aps-workspaces.${AWS_DEFAULT_REGION}.amazonaws.com/workspaces/${WORKSPACE_ID}/api/v1/remote_write
+	queue_config:
+		max_samples_per_send: 1000
+		max_shards: 200
+		capacity: 2500
+	sigv4:
+		region: ${AWS_DEFAULT_REGION}
+EOF
 sudo mkdir -p /etc/prometheus
-sudo mkdir -p /var/lib/prometheus
-wget https://github.com/prometheus/prometheus/releases/download/v2.46.0/prometheus-2.46.0.linux-amd64.tar.gz
-tar -xvf prometheus-*.linux-amd64.tar.gz
-cd prometheus-*.linux-amd64
-sudo mv prometheus promtool /usr/local/bin/
-sudo mv consoles/ console_libraries/ /etc/prometheus/
 sudo mv prometheus.yml /etc/prometheus/prometheus.yml
 ```
 
-2. Check to see `prometheus` and `promtool` are running:
+4. You should now be able to test the prometheus install by running:
 
-```
-$ prometheus --version
-prometheus, version 2.46.0 (branch: HEAD, revision: cbb69e51423565ec40f46e74f4ff2dbb3b7fb4f0)
-  build user:       root@42454fc0f41e
-  build date:       20230725-12:31:24
-  go version:       go1.20.6
-  platform:         linux/amd64
-  tags:             netgo,builtinassets,stringlabels
-$ promtool --version
-promtool, version 2.46.0 (branch: HEAD, revision: cbb69e51423565ec40f46e74f4ff2dbb3b7fb4f0)
-  build user:       root@42454fc0f41e
-  build date:       20230725-12:31:24
-  go version:       go1.20.6
-  platform:         linux/amd64
-  tags:             netgo,builtinassets,stringlabels
-```
+	```bash
+	prometheus --config.file /etc/prometheus/prometheus.yml
+	```
 
-3. Add the `prometheus` user to the HeadNode and start the
+If this works, it'll start a process listening on http://localhost:9090, you can go ahead and Ctrl-C out of it. Next we'll setup a `systemctl` service to run this process automatically in the background.
 
-```
-sudo groupadd --system prometheus
-sudo useradd -s /sbin/nologin --system -g prometheus prometheus
-sudo chmod -R 775 /etc/prometheus/ /var/lib/prometheus/
-```
+5. Create a systemctl service file like so:
 
-3. Start the prometheus service:
+	```bash
+	sudo su
+	cat > /etc/systemd/system/prometheus.service << EOF
+	[Unit]
+	Description=Prometheus Exporter
 
-```
-sudo vim /etc/systemd/system/prometheus.service
-sudo systemctl start prometheus
-sudo systemctl enable prometheus
-```
+	[Service]
+	Environment=PATH=/opt/slurm/bin:\$PATH
+	ExecStart=/usr/bin/prometheus --config.file=/etc/prometheus/prometheus.yml
+	Restart=on-failure
+	RestartSec=15
+	Type=simple
+
+	[Install]
+	WantedBy=multi-user.target
+	EOF
+	```
+
+4. Enable the prometheus service, you should see status **Running**.
+
+	```bash
+	sudo systemctl daemon-reload
+	sudo systemctl enable --now prometheus
+	sudo systemctl status prometheus
+	```
+
+5. Test by querying for current metrics:
+
+	```bash
+	curl http://localhost:9090/metrics
+	```
+
+Congrats! We just setup a managed Prometheus server. In the next section we'll add useful data to prometheus, starting with Slurm exporters.
+
+## Setup Exporters
+
+Now that we have the base infrastructure in place we can start setting up exporters, these serve to collect information and send it to Prometheus. We'll start with the Slurm exporter.
 
 ## Setup Slurm Prometheus Exporter
 
-1. Install [go](https://go.dev/) following instructions for your specific OS, instructions for `Ubuntu 20.04` are below:
+1. Install and Compile Slurm exporter on HeadNode:
 
-  ```bash
-  curl -OL https://golang.org/dl/go1.16.7.linux-amd64.tar.gz
-  sudo tar -C /usr/local -xvf go1.16.7.linux-amd64.tar.gz
-  echo "export PATH=\$PATH:/usr/local/go/bin" >> ~/.profile
-  ```
+	```bash
+	sudo yum install -y golang
+	git clone -b 0.20 https://github.com/vpenso/prometheus-slurm-exporter.git
+	cd prometheus-slurm-exporter
+	make && sudo cp bin/prometheus-slurm-exporter /usr/bin/
+	```
 
-2. Install [Slurm Prometheus Exporter](https://github.com/vpenso/prometheus-slurm-exporter)
+2. Start the systemctl service on the HeadNode:
 
-  ```bash
-  git clone https://github.com/vpenso/prometheus-slurm-exporter.git
-  cd prometheus-slurm-exporter/
-  make
-  sudo su
-  cp bin/prometheus-slurm-exporter /usr/bin/
-  mv lib/systemd/prometheus-slurm-exporter.service /etc/systemd/system
-  ```
+	```bash
+	sudo su
+	cat > /etc/systemd/system/prometheus-slurm-exporter.service << EOF
+	[Unit]
+	Description=Prometheus SLURM Exporter
 
-3. Start prometheus exporter service
+	[Service]
+	Environment=PATH=/opt/slurm/bin:\$PATH
+	ExecStart=/usr/bin/prometheus-slurm-exporter
+	Restart=on-failure
+	RestartSec=15
+	Type=simple
 
-  ```bash
-  sudo systemctl start prometheus-slurm-exporter.service
+	[Install]
+	WantedBy=multi-user.target
+	EOF
 
-  # check on the status
-  systemctl status prometheus-slurm-exporter.service
-  ```
+	sudo systemctl daemon-reload
+	sudo systemctl enable --now prometheus-slurm-exporter
+	sudo systemctl status prometheus-slurm-exporter
+	```
 
-You'll see it running:
+3. Test by querying for current metrics:
 
-  ```
-  ● prometheus-slurm-exporter.service - Prometheus SLURM Exporter
-    Loaded: loaded (/etc/systemd/system/prometheus-slurm-exporter.service; disabled; vendor preset: disabled)
-    Active: active (running) since Wed 2023-04-12 05:18:41 UTC; 8s ago
-  Main PID: 1450 (prometheus-slur)
-    CGroup: /system.slice/prometheus-slurm-exporter.service
-            └─1450 /usr/bin/prometheus-slurm-exporter
+	```bash
+	curl http://localhost:8080/metrics
+	```
 
-  Apr 12 05:18:41 ip-172-31-44-81 systemd[1]: Started Prometheus SLURM Exporter.
-  Apr 12 05:18:41 ip-172-31-44-81 prometheus-slurm-exporter[1450]: time="2023-04-12T05:18:41Z" level=info msg="Starting S...:59"
-  Apr 12 05:18:41 ip-172-31-44-81 prometheus-slurm-exporter[1450]: time="2023-04-12T05:18:41Z" level=info msg="GPUs Accou...:60"
-  Hint: Some lines were ellipsized, use -l to show in full.
-  ```
+## Setup Node Exporter
 
-## Install Grafana:
+1. Similar to the Slurm exporter, we'll also setup [Node exporter](https://github.com/prometheus/node_exporter) a tool that publishes stats about each instance. To get started we'll download and run it:
 
-```ini
-sudo cat <<EOF > print.sh
-[grafana]
-name=grafana
-baseurl=https://rpm.grafana.com
-repo_gpgcheck=1
-enabled=1
-gpgcheck=1
-gpgkey=https://rpm.grafana.com/gpg.key
-sslverify=1
-sslcacert=/etc/pki/tls/certs/ca-bundle.crt
-EOF
-```
+	```bash
+	wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
+	tar xvfz node_exporter-*.*-amd64.tar.gz
+	cd node_exporter-*.*-amd64
+	sudo mv node_exporter /usr/bin
+	```
 
-```bash
-sudo yum install grafana
-```
+2. Next setup a *systemctl service* to automatically run the service. Make sure the status says **Running**.
 
-```bash
-sudo systemctl daemon-reload
-sudo systemctl start grafana-server
-sudo systemctl status grafana-server
-```
+	```bash
+	sudo su
+	cat > /etc/systemd/system/node-exporter.service << EOF
+	[Unit]
+	Description=Prometheus Node Exporter
 
-Now you can login! Switch `3.134.78.130` for the public ip of the HeadNode or use `localhost` if using SSM Port Forwarding.
+	[Service]
+	ExecStart=/usr/bin/node_exporter
+	Restart=on-failure
+	RestartSec=15
+	Type=simple
 
-http://3.134.78.130:3000/login
+	[Install]
+	WantedBy=multi-user.target
+	EOF
 
-```
-username: admin
-password: admin
-```
+	sudo systemctl daemon-reload
+	sudo systemctl enable --now node-exporter
+	sudo systemctl status node-exporter
+	```
 
-This will prompt you to change your password to a more reasonable password.
+3. Test by querying for current metrics:
 
-Next we'll import the following dashboard:
-https://grafana.com/grafana/dashboards/4323-slurm-dashboard/
+	```bash
+	curl http://localhost:9100/metrics
+	```
 
+## Setup DCGM Exporter
 
+[DCGM Exporter](https://github.com/NVIDIA/dcgm-exporter) is a tool for exporting GPU Metrics from Nvidia GPU's.  Here's an example of the stats you can monitor:
 
-## Import default Slurm Dashboard
+![DCGM Exporter](/img/grafana/dcgm-exporter.png)
 
-1. In Grafana go to dashboards > Import > Enter `4232` for the dashboard id and select Prometheus as the datasource:
-
-![]()
-
-## Docker Prometheus + Slurm Exporter
-
-1. Install Docker using the following [postinstall.sh](https://github.com/aws-samples/aws-parallelcluster-post-install-scripts/blob/main/docker/postinstall.sh)
+You'll need to have [DCGM](https://developer.nvidia.com/dcgm) installed on the AMI - it's pre-installed on the [Deep Learning AMI](https://aws.amazon.com/releasenotes/aws-deep-learning-base-gpu-ami-ubuntu-20-04/) so I'll assume you already have it. To check for it run:
 
 ```bash
-wget https://raw.githubusercontent.com/aws-samples/aws-parallelcluster-post-install-scripts/main/docker/postinstall.sh
-sudo bash postinstall.sh
+systemctl status nvidia-dcgm
 ```
 
-1. Clone the [prometheus-slurm-exporter](https://github.com/dholt/prometheus-slurm-exporter.git) repo from Github and build the container image: 
+1. Now we can install & build dcgm-exporter:
 
-```bash
-git clone https://github.com/dholt/prometheus-slurm-exporter.git
-cd prometheus-slurm-exporter/
-docker build -t prometheus-slurm-exporter prometheus
-```
+	```bash
+	git clone https://github.com/NVIDIA/dcgm-exporter.git
+	cd dcgm-exporter/
+	make binary
+	sudo make install
+	```
 
-3. Test to see if the docker container runs locally:
+2. Enable it:
 
-```bash
-docker run -d -v /usr/bin/sdiag:/usr/bin/sdiag -v /usr/bin/sinfo:/usr/bin/sinfo -v /usr/bin/squeue:/usr/bin/squeue -v /etc/slurm:/etc/slurm:ro -v /usr/lib/slurm:/usr/lib/slurm:ro -v /etc/hosts:/etc/hosts:ro -v /var/run/munge:/var/run/munge:ro -p 8080:8080 --name prometheus-slurm-exporter prometheus-slurm-exporter
-```
+	```bash
+	sudo su
+	cat > /etc/systemd/system/dcgm-exporter.service << EOF
+	[Unit]
+	Description=dcgm Exporter
 
-4. Create a `systemctl` file and enable the serviceL: 
+	[Service]
+	ExecStart=/usr/bin/dcgm-exporter
+	Restart=on-failure
+	RestartSec=15
+	Type=simple
 
-```
-sudo mv prometheus-slurm-exporter.service /etc/systemd/system
-sudo systemctl start prometheus-slurm-exporter
-sudo systemctl enable prometheus-slurm-exporter
-```
+	[Install]
+	WantedBy=multi-user.target
+	EOF
+	```
 
-5. Check on the status of `prometheus-slurm-exporter`
+## Import Dashboards
 
-```
-[ec2-user@ip-172-31-19-83 prometheus-slurm-exporter]$ sudo systemctl status prometheus-slurm-exporter
-● prometheus-slurm-exporter.service - Prometheus Slurm Exporter
-   Loaded: loaded (/etc/systemd/system/prometheus-slurm-exporter.service; disabled; vendor preset: disabled)
-   Active: active (running) since Fri 2023-07-28 20:38:52 UTC; 7s ago
-  Process: 30657 ExecStartPre=/usr/bin/docker pull dholt/prometheus-slurm-exporter (code=exited, status=0/SUCCESS)
-  Process: 30643 ExecStartPre=/usr/bin/docker rm prometheus-slurm-exporter (code=exited, status=0/SUCCESS)
-  Process: 30587 ExecStartPre=/usr/bin/docker stop prometheus-slurm-exporter (code=exited, status=0/SUCCESS)
- Main PID: 30679 (docker)
-    Tasks: 10
-   Memory: 10.6M
-   CGroup: /system.slice/prometheus-slurm-exporter.service
-           └─30679 /usr/bin/docker run --rm -v /usr/bin/sdiag:/usr/bin/sdiag -v /usr/bin/sinfo:/usr/bin/sinfo -v /usr/bin/sq...
-```
-
-```
-sudo docker-compose up -d
-```
+Next we can add dashboards to Grafana to display all this information!
