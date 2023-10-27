@@ -42,6 +42,17 @@ I completed my BA and MS in Computer Science in 4 years at Boston University. I 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/WSu6I3GqN-Y?si=fwEdiCjpqhRW1A-e" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 {{< /rawhtml >}}
 
+## Alex 👰🏻
+
+Out of all my achievements the one I am most proud of is marrying [my wife Alex](https://www.instagram.com/abexalate/). 
+
+{{< rawhtml >}}
+<p align="center">
+    <img src='/img/about/alex.jpg' alt='Sean and Alex' style='border: 0px;' height='300px' />
+    <img src='/img/about/alex2.jpg' alt='Sean and Alex' style='border: 0px;' height='300px' />
+</p>
+{{< /rawhtml >}}
+
 ## People who inspire me 😎
 
 I take inspiration from [DHH](https://dhh.dk/), [Feross](https://feross.org), and [Nikil](http://www.nikilster.com/about.html).
