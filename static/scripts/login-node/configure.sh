@@ -25,19 +25,15 @@ echo 'Listing your clusters...'
 pcluster list-clusters | jq '.clusters[].clusterName'
 read -p 'What cluster would you like to create a Login node for? ' cluster_name
 echo -e "Selected ${GREEN}$cluster_name${NC}..."
-
 version=$(pcluster list-clusters | jq  ".clusters[] | select(.clusterName | contains(\"${cluster_name}\")) | .version")
-echo -e "Found version... ${GREEN}$version${NC}"
+echo -e "Found Version... ${GREEN}$version${NC}"
 if ! test "$version" = "$(pcluster version | jq '.version')"
 then
     echo -e "Must install pcluster version ${GREEN}$version${NC}... exiting"
     exit
 fi
-
 headnode_ip=$(pcluster describe-cluster -n $cluster_name | jq '.headNode.privateIpAddress')
 echo -e "Found HeadNode ip ${GREEN}$headnode_ip${NC}..."
-pcluster_version=$(pcluster describe-cluster -n $cluster_name | jq '.version')
-echo -e "Found Version ${GREEN}$pcluster_version${NC}..."
 subnet=$(aws ec2 describe-instances \
     --instance-ids `pcluster describe-cluster -n $cluster_name | jq '.headNode.instanceId' | tr -d '"' ` | jq '.Reservations[0].Instances[0].SubnetId')
 echo -e "Found Subnet ${GREEN}$subnet${NC}..."
@@ -59,4 +55,4 @@ cat <<EOF | tee variables.json
 }
 EOF
 echo 'Now run the command:'
-echo -e "${GREEN}packer build -color=true -var-file variables.json pc-login-node.json${NC}"
+echo -e "${GREEN}packer build -color=true -var-file variables.json packer.json${NC}"
