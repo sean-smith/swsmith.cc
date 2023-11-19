@@ -49,7 +49,7 @@ cat <<EOF | tee variables.json
   "instance_type": "c5a.2xlarge",
   "encrypt_boot": "false",
   "public_ip": "true",
-  "ssh_interface": "public_dns",
+  "ssh_interface": "session_manager",
   "head_node_ip": $headnode_ip,
   "subnet_id": $subnet
 }
