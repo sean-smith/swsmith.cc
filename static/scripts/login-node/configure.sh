@@ -5,22 +5,35 @@ GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
 if ! command -v pcluster >/dev/null 2>&1 ; then
-    echo "Must install aws-parallelcluster cli"
+    echo "Must install aws-parallelcluster cli... exiting"
+    exit
 fi
 if ! command -v aws >/dev/null 2>&1 ; then
-    echo "Must install aws cli"
+    echo "Must install aws cli... exiting"
+    exit
 fi
 if ! command -v jq >/dev/null 2>&1 ; then
-    echo "Must install jq"
+    echo "Must install jq... exiting"
+    exit
 fi
 if ! command -v packer >/dev/null 2>&1 ; then
-    echo "Must install packer"
+    echo "Must install packer... exiting"
+    exit
 fi
     
 echo 'Listing your clusters...'
 pcluster list-clusters | jq '.clusters[].clusterName'
 read -p 'What cluster would you like to create a Login node for? ' cluster_name
 echo -e "Selected ${GREEN}$cluster_name${NC}..."
+
+version=$(pcluster list-clusters | jq  ".clusters[] | select(.clusterName | contains(\"${cluster_name}\")) | .version")
+echo -e "Found version... ${GREEN}$version${NC}"
+if ! test "$version" = "$(pcluster version | jq '.version')"
+then
+    echo -e "Must install pcluster version ${GREEN}$version${NC}... exiting"
+    exit
+fi
+
 headnode_ip=$(pcluster describe-cluster -n $cluster_name | jq '.headNode.privateIpAddress')
 echo -e "Found HeadNode ip ${GREEN}$headnode_ip${NC}..."
 pcluster_version=$(pcluster describe-cluster -n $cluster_name | jq '.version')
