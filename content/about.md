@@ -25,7 +25,7 @@ The trip took 31 days and in addition to landing in each state we also ran a mil
 
 ## Running 🏃🏻‍♂️
 
-I'm an avid runner, I completed my first marathon at age 15 and haven't stopped running since. I've completed numerous ultra-marathon races including Canyons 100M, Oregon Cascades 100M, [UTMB](https://montblanc.utmb.world/races/UTMB) and a bunch of shorter races. My current goal is to qualify for Hardrock 100. 
+I'm an avid runner, I completed my first marathon at age 15 and haven't stopped running since. I've completed numerous ultra-marathon races including Canyons 100M, Oregon Cascades 100M, [UTMB](https://montblanc.utmb.world/races/UTMB) and a bunch of shorter races. My current goal is to qualify for Hardrock 100 or Western States.
 
 {{< rawhtml >}}
 <p align="center">

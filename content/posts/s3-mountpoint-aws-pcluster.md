@@ -17,7 +17,7 @@ tags: [S3, AWS ParallelCluster, aws]
 
 So what are the downsides?
 
-* **Read-only** in alpha
+* ~~**Read-only** in alpha~~ GA version [released March 2023](https://aws.amazon.com/about-aws/whats-new/2023/03/mountpoint-amazon-s3/)
 * Non-POSIX compliant. This means operations such as metadata changes, file-locking ect. are not supported.
 
 ## Setup
@@ -75,6 +75,7 @@ So what are the downsides?
           - Policy: arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
         S3Access:
           - BucketName: mybucket
+            EnableWriteAccess: true
       CustomActions:
         OnNodeConfigured:
           Script: https://swsmith.cc/scripts/s3-mountpoint.sh
@@ -102,6 +103,7 @@ So what are the downsides?
           Iam:
             S3Access:
                 - BucketName: mybucket
+                  EnableWriteAccess: true
             AdditionalIamPolicies:
                 - Policy: arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
           CustomActions:
