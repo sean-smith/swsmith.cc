@@ -89,6 +89,28 @@ I've outlined the minimum versions of each of the required packages below. Note 
 |  CUDA Driver  |  `535.54.03`  |      `450.80.02`      |     `535.54.03`       |
 |  CUDA Version |  `12.2`       |      `11.4`           |     `11.8`            |
 
+```bash
+#!/bin/bash
+
+# EFA Version
+cat /opt/amazon/efa_installed_packages | grep "EFA installer version:"
+
+# NCCL Version
+sudo apt install mlocate
+locate nccl| grep "libnccl.so" | tail -n1 | sed -r 's/^.*\.so\.//'
+
+# libfabric Version
+fi_info --version | grep "libfabric:"
+
+# NCCL OFI Version
+strings /opt/aws-ofi-nccl/lib/libnccl-net.so | grep Initializing
+
+# CUDA Driver
+nvidia-smi --query-gpu=driver_version --format=csv,noheader | head -1
+
+# CUDA Version
+nvcc --version | grep "release"
+```
 
 ## How do I see how it's working?
 
