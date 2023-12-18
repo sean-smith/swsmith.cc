@@ -89,6 +89,8 @@ I've outlined the minimum versions of each of the required packages below. Note 
 |  CUDA Driver  |  `535.54.03`  |      `450.80.02`      |     `535.54.03`       |
 |  CUDA Version |  `12.2`       |      `11.4`           |     `11.8`            |
 
+To easily grab these versions you can run the following script:
+
 ```bash
 #!/bin/bash
 
