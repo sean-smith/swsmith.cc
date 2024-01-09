@@ -120,3 +120,11 @@ d3.set_node_properties(color=adjmat.columns.values)
 # Plot
 d3.show(filepath='temp/')
 ```
+
+3. Next run it, changing region and instance type for your use case:
+
+```bash
+python3 d3.py
+```
+
+Voila! a file `d3graph.html` will get created in a `temp/` directory. You can now open that file to see your instance topology.

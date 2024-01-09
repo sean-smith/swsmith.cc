@@ -18,7 +18,7 @@ Grafana is an open source tool that allows us to create dashboards and monitor o
 * EFA (Network) Traffic
 * Disk iops
 
-We'll setup the following exporters but don't limit yourself to just these. There's thousands of useful Prometheus exporters that can be plugged into this same architecture.
+We'll setup the following exporters but don't limit yourself to just these. There's [thousands of useful Prometheus exporters](https://prometheus.io/docs/instrumenting/exporters/) that can be plugged into this same architecture.
 
 | Prometheus Exporter       | Description              |
 |---------------------------|--------------------------|
