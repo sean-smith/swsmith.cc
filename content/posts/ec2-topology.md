@@ -10,7 +10,7 @@ tags: [aws]
 {{< rawhtml >}}
 <a href='/scripts/temp/d3graph.html'>
 <p align="center">
-    <img src='/img/instance-topology/instance-topology.png' alt='Instance Topology Graph' style='border: 0px;' width='400px' />
+    <img src='/img/instance-topology/instance-topology.png' alt='Instance Topology Graph' style='border: 0px;' width='600px' />
 </p></a>
 {{< /rawhtml >}}
 
@@ -65,6 +65,34 @@ This will return a JSON output similar to the following:
 ```
 
 This is great but hard to visualize, hence why we're adding D3 Graph to this output.
+
+# How do we interpret this data?
+
+{{< rawhtml >}}
+<a href='https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/how-ec2-instance-topology-works.html'>
+<p align="center">
+    <img src='/img/instance-topology/topology-diagram.png' alt='Instance Topology Graph' style='border: 0px;' width='400px' />
+</p></a>
+{{< /rawhtml >}}
+
+Each instance has a set of three network nodes, these are ordered from *furthest to closest* to the instance, so Layer 3 is closest to the instance. The best possible latency comes from two instances with the same Layer 3 switch.
+
+| Layer   | Network Node         |
+|---------|----------------------|
+| Layer 3 (closest to instance) | nn-3333333333example |
+| Layer 2 | nn-2222222222example |
+| Layer 1 | nn-1111111111example |
+
+A cluster entirely connected looks like:
+
+{{< rawhtml >}}
+<a href=''>
+<p align="center">
+    <img src='/img/instance-topology/fully-connected.png' alt='Instance Topology Graph' style='border: 0px;' width='600px' />
+</p></a>
+{{< /rawhtml >}}
+
+This can be accomplished by placing these instances into a *placement group*, See [EFA Best Practices](efa-best-practices.html) for more.
 
 # What is D3 Graph?
 
@@ -133,3 +161,5 @@ python3 d3.py
 ```
 
 Voila! a file `d3graph.html` will get created in a `temp/` directory. You can now open that file to see your instance topology.
+
+# What does Good look like?
