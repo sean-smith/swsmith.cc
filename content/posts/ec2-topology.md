@@ -8,7 +8,7 @@ tags: [aws]
 ---
 
 {{< rawhtml >}}
-<a href='/scripts/temp/d3graph.html'>
+<a href='/html/d3graph-sparse.html'>
 <p align="center">
     <img src='/img/instance-topology/instance-topology.png' alt='Instance Topology Graph' style='border: 0px;' width='600px' />
 </p></a>
@@ -86,13 +86,22 @@ Each instance has a set of three network nodes, these are ordered from *furthest
 A cluster entirely connected looks like:
 
 {{< rawhtml >}}
-<a href=''>
+<a href='/html/d3graph-connected.html'>
 <p align="center">
     <img src='/img/instance-topology/fully-connected.png' alt='Instance Topology Graph' style='border: 0px;' width='600px' />
 </p></a>
 {{< /rawhtml >}}
 
-This can be accomplished by placing these instances into a *placement group*, See [EFA Best Practices](efa-best-practices.html) for more.
+A mostly disconnected cluster looks like:
+
+{{< rawhtml >}}
+<a href='/html/d3graph-sparse.html'>
+<p align="center">
+    <img src='/img/instance-topology/instance-topology.png' alt='Instance Topology Graph' style='border: 0px;' width='600px' />
+</p></a>
+{{< /rawhtml >}}
+
+A highly interconnected cluster can be accomplished by placing the instances into a *placement group*, See [EFA Best Practices](efa-best-practices.html) for more.
 
 # What is D3 Graph?
 

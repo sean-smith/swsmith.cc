@@ -5,8 +5,8 @@ from pprint import pprint
 
 ec2 = boto3.client('ec2', region_name='us-west-2')
 
-response = ec2.describe_instance_topology(Filters = [{'Name':'instance-type', 'Values':['trn1.32xlarge']}])
-# response = ec2.describe_instance_topology(Filters = [{'Name':'instance-type', 'Values':['p4de.24xlarge']}])
+# response = ec2.describe_instance_topology(Filters = [{'Name':'instance-type', 'Values':['trn1.32xlarge']}])
+response = ec2.describe_instance_topology(Filters = [{'Name':'instance-type', 'Values':['p4de.24xlarge']}])
 
 pprint(response.get('Instances'))
 
@@ -40,4 +40,4 @@ d3.show()
 # Make changes in node properties
 d3.set_node_properties(color=adjmat.columns.values)
 # Plot
-d3.show(filepath='temp/')
+d3.show(filepath='p4de/')
