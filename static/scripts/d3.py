@@ -5,7 +5,8 @@ from pprint import pprint
 
 ec2 = boto3.client('ec2', region_name='us-west-2')
 
-response = ec2.describe_instance_topology(Filters = [{'Name':'instance-type', 'Values':['p4de.24xlarge']}])
+response = ec2.describe_instance_topology(Filters = [{'Name':'instance-type', 'Values':['trn1.32xlarge']}])
+# response = ec2.describe_instance_topology(Filters = [{'Name':'instance-type', 'Values':['p4de.24xlarge']}])
 
 pprint(response.get('Instances'))
 
@@ -13,10 +14,15 @@ pprint(response.get('Instances'))
 source = []
 target = []
 for instance in response.get('Instances'):
-    instance_id = instance.get('InstanceId')
-    for network_node in instance.get('NetworkNodes'):
-        source += [instance_id]
-        target += [network_node]
+    # Layer 3 (closest to instance)
+    source += [instance.get('InstanceId')]
+    target += [instance.get('NetworkNodes')[2]]
+    # Layer 2
+    source += [instance.get('NetworkNodes')[2]]
+    target += [instance.get('NetworkNodes')[1]]
+    # Layer 1
+    source += [instance.get('NetworkNodes')[1]]
+    target += [instance.get('NetworkNodes')[0]]
 
 pprint(source)
 pprint(target)

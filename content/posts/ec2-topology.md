@@ -10,7 +10,7 @@ tags: [aws]
 {{< rawhtml >}}
 <a href='/scripts/temp/d3graph.html'>
 <p align="center">
-    <img src='/img/instance-topology.png' alt='Instance Topology Graph' style='border: 0px;' width='400px' />
+    <img src='/img/instance-topology/instance-topology.png' alt='Instance Topology Graph' style='border: 0px;' width='400px' />
 </p></a>
 {{< /rawhtml >}}
 
@@ -97,10 +97,15 @@ pprint(response.get('Instances'))
 source = []
 target = []
 for instance in response.get('Instances'):
-    instance_id = instance.get('InstanceId')
-    for network_node in instance.get('NetworkNodes'):
-        source += [instance_id]
-        target += [network_node]
+    # Layer 3 (closest to instance)
+    source += [instance.get('InstanceId')]
+    target += [instance.get('NetworkNodes')[2]]
+    # Layer 2
+    source += [instance.get('NetworkNodes')[2]]
+    target += [instance.get('NetworkNodes')[1]]
+    # Layer 1
+    source += [instance.get('NetworkNodes')[1]]
+    target += [instance.get('NetworkNodes')[0]]
 
 pprint(source)
 pprint(target)
