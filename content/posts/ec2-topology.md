@@ -14,7 +14,7 @@ tags: [aws]
 </p></a>
 {{< /rawhtml >}}
 
-[Click for Demo!](/scripts/temp/d3graph.html)
+[Click for Demo!](/html/d3graph-sparse.html)
 
 # What is the EC2 Topology API?
 
