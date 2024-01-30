@@ -1,0 +1,2 @@
+build:
+	pdflatex SeanSmith.tex
