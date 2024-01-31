@@ -7,6 +7,12 @@ disqus: false
 
 Slides from various talks:
 
+# [Design, engineering & simulation on AWS using HPC & virtual desktops, AWS re:Invent - November 29th, 2023](slides/cmp326-RES.pdf)
+
+[![Engineering in the Cloud re:Invent Talk](slides/cmp326-RES.png)](slides/cmp326-RES.pdf)
+
+[Brian Skjerven](https://www.linkedin.com/in/brian-skjerven-0218a191/) and myself gave a talk at AWS re:Invent in 2023 titled "Design, engineering & simulation on AWS using HPC & virtual desktops" announcing a new product [Research and Engineering Studio](https://aws.amazon.com/hpc/res/).
+
 # [CFD in the Cloud, AWS re:Invent - November 30th, 2022](slides/cmp402-slides.pdf)
 
 [![CFD in the Cloud re:Invent Talk](slides/cmp402.png)](slides/cmp402-slides.pdf)
