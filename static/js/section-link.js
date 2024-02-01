@@ -2,7 +2,6 @@
 // see https://gohugo.io/content-management/cross-references/#use-of-ref-and-relref
 window.onload = function() {
     var allHeadings = document.getElementsByTagName("h2");
-    console.log(allHeadings);
 
     for (var i = 0; i < allHeadings.length; i++) {
         var heading = allHeadings[i].innerHTML;
