@@ -16,6 +16,7 @@ disqusShortname = "swsmith-cc"
 subtitle = "Blog that's mostly made up with my [Github Gists](https://gist.github.com/sean-smith)"
 og_image = "/img/sean.jpg"
 customJS = ['js/section-link.js']
+customcss = ['css/button.css']
 
 # Social Tags
 [[params.social]]
