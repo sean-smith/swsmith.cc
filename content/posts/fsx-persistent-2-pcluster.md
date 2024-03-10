@@ -53,7 +53,7 @@ So we'll need to:
 
 ![Outbound Rule](/img/fsx-lustre/outbound-rule.png)
 
-# 2. Create FSx Filesystem
+## 2. Create FSx Filesystem
 
 1. Go to the [FSx Lustre Console](https://console.aws.amazon.com/fsx/home) and click **Create Filesystem**.
 2. On the next screen, select **FSx Lustre**:
@@ -97,7 +97,7 @@ SharedStorage:
 
 ![ParallelCluster UI](/img/fsx-lustre/pcluster-ui.png)
 
-# 4. Link Filesystem to S3
+## 4. Link Filesystem to S3
 
 Once the filesystem has been created, you can now link it to an S3 Bucket. This allows you to sync data back and forth between the filesystem and S3. It also allows you to delete the filesystem and preserve it's content on S3. 
 
