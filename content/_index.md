@@ -6,7 +6,7 @@ draft: false
 
 ![Profile Pic](img/sean.jpg)
 
-I'm a Solution Architect at [AWS](https://aws.amazon.com/hpc/) working High Performance and Machine Learning.
+I'm a Solution Architect at [AWS](https://aws.amazon.com/hpc/) working Generative AI, specifically focused on training Foundational Models. My background is in HPC, I built a product called [AWS ParallelCluster](https://aws.amazon.com/hpc/parallelcluster/), a Slurm based orchestrator for HPC jobs.
 
 In my free time I'm a pilot and Flight Instructor (CFI, CFII). Learn to [fly with me!](https://www.youtube.com/watch?v=qCqnzM-LuqA&t=1s) ✈️
 
