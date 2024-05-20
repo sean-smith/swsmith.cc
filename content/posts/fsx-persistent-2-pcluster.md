@@ -109,8 +109,8 @@ Once the filesystem has been created, you can now link it to an S3 Bucket. This 
 
 | Field      | Description |
 | ----------- | ----------- |
-| Filesystem Path      | Path of the FSx Filesystem to sync back to S3 i.e. `/shared`       |
-| Data Repository Path   | Path on S3 to store synced content  i.e. `s3://spack-swsmith/shared`     |
+| Filesystem Path      | Path of the FSx Filesystem to sync back to S3 after the mountpoint. Make this `/` to sync the entire thing.       |
+| Data Repository Path   | Path on S3 to store synced content  i.e. `s3://bucket/` will replicate to the root of the bucket.     |
 
 ![Link S3 Bucket](/img/fsx-lustre/link-dra.png)
 
