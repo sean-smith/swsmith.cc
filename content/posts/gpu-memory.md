@@ -1,9 +1,9 @@
 ---
-title: GPU Memory Calculator 💾 
+title: GPU Memory Calculator 🧮
 description:
-date: 2024-01-31
+date: 2024-05-21
 tldr: Quickly see how much memory your model needs
-draft: true
+draft: false
 tags: [nvidia, gpu, nccl, slurm, aws]
 ---
 
