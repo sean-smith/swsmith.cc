@@ -8,6 +8,8 @@ og_image:
 tags: [aws parallelcluster, slurm, aws]
 ---
 
+### Update (5/23/24): the author of this plugin, Neil Munday published a [recipe on AWS HPC Recipes](https://github.com/aws-samples/aws-hpc-recipes/tree/main/recipes/pcluster/slurm_accounting_with_email). Please see that for the most up to date guidance.
+
 Slurm has an option to send emails when your job changes status. This is useful to get notifications when your job completes. For example in my sbatch script I could add:
 
 ```bash
