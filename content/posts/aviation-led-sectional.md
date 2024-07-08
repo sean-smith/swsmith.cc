@@ -4,7 +4,7 @@ description:
 date: 2023-02-14
 tldr: Build a map with colored LED's based on weather conditions at airports.
 draft: false
-og_image: 
+og_image: /img/aviation-led-sectional/finished.png
 tags: [aviation, arduino]
 ---
 
