@@ -4,7 +4,7 @@ description:
 date: 2024-06-17
 tldr: How to fly yourself to Alaska
 draft: false
-og_image: img/alaska
+og_image: /img/alaska/IMG_0890.jpeg
 tags: []
 ---
 
