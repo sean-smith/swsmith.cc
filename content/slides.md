@@ -7,6 +7,12 @@ disqus: false
 
 Slides from various talks:
 
+# [Train and tune foundation models at scale with Amazon SageMaker, AWS NYC Summit - July 21th, 2024](slides/aim309-slides.pdf)
+
+[![Hyperpod NYC Summit Talk](slides/aim309.png)](slides/aim309-slides.pdf)
+
+[Kanwaljit Khurmi](https://www.linkedin.com/in/kanwaljitkhurmi) and myself gave a talk at AWS NYC Summit in 2024 titled "Train and tune foundation models at scale with Amazon SageMaker" announcing a new product [AWS Hyperpod](https://aws.amazon.com/sagemaker/hyperpod/).
+
 # [Design, engineering & simulation on AWS using HPC & virtual desktops, AWS re:Invent - November 29th, 2023](slides/cmp326-RES.pdf)
 
 [![Engineering in the Cloud re:Invent Talk](slides/cmp326-RES.png)](slides/cmp326-RES.pdf)
