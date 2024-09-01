@@ -23,7 +23,64 @@ The idea was to build a map, known in aviation parlance as a sectional, that ill
 | Windy         | Wind > 25kts                                         | Yellow         |
 | Thunderstorms | Flashes white when thunderstorms are in the vicinity | Flashing White |
 
-There's many guides online on how to build one of these and I chose to follow [Kyle Harmon's Guide](https://led-sectional.kyleharmon.com/). The following instructions assume you've followed his build guide and are now ready to flash the software on the arduino.
+There's many guides online on how to build one of these and I chose to follow [Kyle Harmon's Guide](https://led-sectional.kyleharmon.com/). I then customized it with my own frame style.
+
+## Build
+
+## Supplies
+* [MDF Board](https://www.homedepot.com/p/Handprint-1-8-in-x-2-ft-x-4-ft-Tempered-Hardboard-Actual-0-115-in-x-23-75-in-x-47-75-in-Project-Panel-109112/202585358)
+* FAA Sectional
+* 3M Super 77 Spray Adhesive
+* 1x4" pine trim boards
+* [WS2811 LED lights](https://www.amazon.com/Rextin-WS2811-Digital-Addressable-Waterproof/dp/B01AU6UG70/)
+* [Arduino controller](https://led-sectional.kyleharmon.com/kit.html) from Kyle Harmon
+
+## Building the map...
+
+    1.    First measure and cut down the MDF board - pro tip: Home Depot will do this for you! You can even use the off cuts to practice glueing / drilling. The dimensions I used for the Alaska sectional are 31” x 17”
+
+![Blank MDF](/img/aviation-led-sectional/blank_mdf.jpeg)
+
+
+    2.    First glue the paper sectional to the MDF backing board by spraying the shiny side of the MDF backing board with Super 77 adhesive. Wait a minute until the glue becomes tacky before applying the paper over the board starting from one side moving to the other and carefully flattening down with a ruler. Leave about 1” overhang on the sides so you can cut it down later.
+
+    3.    Check that each of the airports you want to install an LED on have FAA official Metars by typing in the airport code to [FAA Metar website](https://aviationweather.gov/data/metar/). Mark the airports you want to illuminate with a sharpie.
+
+    4.    Drill out each of those airports carefully with a 5/16” bit. Clean the edges of the holes with a box cutter.
+
+  ![Glue down sectional](/img/aviation-led-sectional/glue_sectional.jpg)
+
+    5.    Route the WS2811 LED lights through each hole, skipping LED’s to add length between airports. I highly advise trying to keep the LED strand intact as opposed to creating wiring extensions between the LED’s since each extension requires 6 x soldering connections and takes a long time. The LED pack comes with 50 LED’s so if you’re judicious you won’t have to create any wiring harnesses. 
+
+  {{< rawhtml >}}
+<p align="center">
+    <img src='/img/aviation-led-sectional/wiring.jpeg' alt='Wiring Sectional' style='border: 0px;' width='400px' />
+</p>
+{{< /rawhtml >}}
+
+    6.    Once you’re happy with the LED layout hot glue the LED’s into place. You need to use a lot of hot glue to get them to sit properly.
+
+## Building the frame...
+
+To build the frame I used 1x4" finish quality pine from Home Depot joined together with a pocket holes. 
+
+    1.    I used 4” x 1” finish quality pine boards to create a box that would enclose the MDF. First I measured 4 x pieces and cut them down to size, adding an additional 1.5” to the top pieces so they’d cover the edge (.75” x 2)
+
+    2.    To secure the frame together I used pocket holes using a fancy kreg jig. You don't need a fancy one, the basic Kreg jig will do the same job. To get the pieces to set correctly I made a jig using clamps and spare wood, this ensured the edges lined up smoothly and the frame was square. Woodworkers probably know a better way to do this but this is what I was able to come up with. 
+
+{{< rawhtml >}}
+    <p align="center">
+        <img src='/img/aviation-led-sectional/kreg.jpeg' alt='Wiring Sectional' style='border: 0px;' width='200px' />
+        <img src='/img/aviation-led-sectional/frame.jpeg' alt='Frame' style='border: 0px;' width='200px' />
+    </p>
+{{< /rawhtml >}}
+
+    3. After securing the frame together, I 
+
+
+## Software
+
+The following instructions assume you've followed his build guide and are now ready to flash the software on the arduino.
 
 ### A. Download Arduino
 
