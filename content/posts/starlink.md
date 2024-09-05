@@ -53,7 +53,7 @@ Generally around 30-40 Mbps down and 10-15 Mbps up in Alaska. If you look at the
 
 {{< rawhtml >}}
 <p align="center">
-    <img src='/img/starlink/transit_roof_plugs.jpg' alt='Transit roof plugs' style='border: 0px;' width='600px' />
+    <img src='/img/starlink/transit_roof_plugs.jpeg' alt='Transit roof plugs' style='border: 0px;' width='600px' />
 </p>
 {{< /rawhtml >}}
 
@@ -69,6 +69,7 @@ Generally around 30-40 Mbps down and 10-15 Mbps up in Alaska. If you look at the
 
 6. I installed a switch to control the starlink and added that on the power (red wire) side of the inverter. I used a switch that's got an integrated LED so I can tell at a glance if I've left it on (which happens quite often).
 
+> Will update this post with more pictures soon... Email me at seanwssmith@gmail.com with anything you'd like to see.
 
 
 
