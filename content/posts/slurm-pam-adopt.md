@@ -32,7 +32,7 @@ In the next section we'll setup Slurm PAM Adopt:
 
     ```bash
     sudo su
-    echo "-account    required      pam_slurm_adopt.so" >> vim /etc/pam.d/system-auth
+    echo "-account required http://pam_slurm_adopt.so " >> /etc/pam.d/system-auth
     ```
 
 3. Next enable the prolog flag in `slurm.conf`:
