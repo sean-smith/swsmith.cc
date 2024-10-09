@@ -5,11 +5,11 @@ draft: false
 disqus: false
 ---
 
-Inspired by [twogoglobal.com](https://twogoglobal.com/bucket-list/)
+What's on your bucket list?
 
 * ✅ Run the Ultra-trail Mt. Blanc (UTMB) [proof](https://www.instagram.com/p/CxMSjARpdT4/?img_index=1)
 * ✅ Climb Mt Kilimanjaro
-* ✅ Climb Mt Blanc [proof]()
+* ✅ Climb Mt Blanc [proof](/posts/mt-blanc.html)
 * ❌ Climb the Seven Highest Summits on each continent (2/7)
 * ❌ Run a sub-3 hour marathon
 * ✅ Learn to paraglide 🪂
@@ -18,4 +18,6 @@ Inspired by [twogoglobal.com](https://twogoglobal.com/bucket-list/)
 * ✅ Visit all 50 states
 * ❌ Visit all 7 continents (4/7)
 * ✅ Run 100 mile race
-* ✅ Ironman
+* ✅ Complete an Ironman [proof](/posts/pilot.html)
+
+Inspired by [twogoglobal.com](https://twogoglobal.com/bucket-list/)

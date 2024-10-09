@@ -4,7 +4,7 @@ description:
 date: 2024-09-23
 tldr: climb the highest peak in europe with no gear
 draft: false
-og_image: 
+og_image: /img/mt-blanc/summit.jpeg
 tags: []
 ---
 
