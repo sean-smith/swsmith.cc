@@ -17,7 +17,9 @@ What's on your bucket list?
 * ❌ Climb the 5 volcanoes in WA (Rainier, Baker, Adams, St. Helens, Glacier Peak) (4/5) 🗻
 * ✅ Visit all 50 states
 * ❌ Visit all 7 continents (4/7)
-* ✅ Run 100 mile race
-* ✅ Complete an Ironman [proof](/posts/pilot.html)
+* ✅ Run 100 mile race [proof](https://www.instagram.com/p/Crq9xhGvoIX/?img_index=1)
+* ✅ Complete an Ironman [proof](https://www.instagram.com/stories/highlights/18142978582277401/)
+* ✅ Fly to Alaska [proof](/posts/fly-to-alaska.html)
+* ❌ Fly to Mexico
 
 Inspired by [twogoglobal.com](https://twogoglobal.com/bucket-list/)
