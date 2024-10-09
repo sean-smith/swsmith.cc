@@ -58,11 +58,16 @@ url = "/about.html"
 weight = 2
 
 [[menu.main]]
+name = "Bucket List"
+url = "/bucketlist.html"
+weight = 3
+
+[[menu.main]]
 name = "Websites"
 url = "/websites.html"
-weight = 3
+weight = 4
 
 [[menu.main]]
 name = "Slides"
 url = "/slides.html"
-weight = 4
+weight = 5
