@@ -12,6 +12,7 @@ What's on your bucket list?
 * ✅ Climb Mt Blanc [proof](/posts/mt-blanc.html)
 * ❌ Climb the Seven Highest Summits on each continent (2/7)
 * ❌ Run a sub-3 hour marathon
+* ❌ Ski tour the Haute route
 * ✅ Learn to paraglide 🪂
 * ✅ Learn to fly ✈️ [proof](/posts/pilot.html)
 * ❌ Climb the 5 volcanoes in WA (Rainier, Baker, Adams, St. Helens, Glacier Peak) (4/5) 🗻

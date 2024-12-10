@@ -4,7 +4,7 @@ type: page
 draft: false
 ---
 
-I am a Solution Architect at [AWS](https://aws.amazon.com/hpc/) focused on High-Performance and Scientific Computing. I joined Amazon in 2017 and I helped build and launch [AWS ParallelCluster](https://github.com/aws/aws-parallelcluster), an open-source product to build High-Performance computing clusters. I then built out [ParallelCluster Manager](https://pcluster.cloud) (now called ParallelCluster UI), a web-console for ParallelCluster. I'm a [Pilot and a Flight Instructor (CFI, CFII)](#aviation-). I own two airplanes and have [flown to all 50 US States](#50-states-) to raise money for Angel Flight West. I run long distances and regularly run [100 miles at a time](#running-). In college I gave the [graduation speech](#college-) for the CS department and graduated in four years with a bachelor and masters degree.
+I am a Solution Architect at [AWS](https://aws.amazon.com/hpc/) focused on AI/ML, specifically distributed training. My background is in High-Performance and Scientific Computing. I joined Amazon in 2017 and I helped build and launch [AWS ParallelCluster](https://github.com/aws/aws-parallelcluster), an open-source product to build High-Performance computing clusters. I then built out [ParallelCluster Manager](https://pcluster.cloud) (now called ParallelCluster UI), a web-console for ParallelCluster. I'm a [Pilot and a Flight Instructor (CFI, CFII)](#aviation-). I own two airplanes and have [flown to all 50 US States](#50-states-) to raise money for Angel Flight West. I run long distances and regularly run [100 miles at a time](#running-). In college I gave the [graduation speech](#college-) for the CS department and graduated in four years with a bachelor and masters degree.
 
 ## Aviation ✈️
 
