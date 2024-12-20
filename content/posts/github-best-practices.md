@@ -48,6 +48,12 @@ Then create a `~/.gitignore` file:
 *.swp
 ```
 
+For good measure setup a `gl` alias to make your life easier:
+
+```bash
+echo "alias gl='git lg | head'" >> ~/.bashrc
+```
+
 ## 1. Get the code🍴
 
 Fork the repo from the Github page:
