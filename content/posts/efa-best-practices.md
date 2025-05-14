@@ -20,7 +20,7 @@ tags: [aws, efa, hpc, ml]
 
 > What is EFA and how is it different than Infiniband?
 
-EFA is a *network protocol* and *network device* available on select AWS instance types including `p5.96xlarge`, `p4d.48xlarge`, `hpc7a.96xlarge` ect. It provides OS-bypass (aka skip the kernel) communication, RDMA Read and Write (on p5) and significantly lower latency over TCP. It's built with scale in mind and scales up petabit size (actually a whole lot bigger), up to 20,000 H100's in an [Ultracluster](https://aws.amazon.com/ec2/ultraclusters/).
+EFA is a *network protocol* and *network device* available on select AWS instance types including `p5.48xlarge`, `p4d.24xlarge`, `hpc7a.96xlarge` ect. It provides OS-bypass (aka skip the kernel) communication, RDMA Read and Write (on p5) and significantly lower latency over TCP. It's built with scale in mind and scales up petabit size (actually a whole lot bigger), up to 20,000 H100's in an [Ultracluster](https://aws.amazon.com/ec2/ultraclusters/).
 
 So how fast is it? It provides up to 3,200 Gbps on the p5 instances, with speeds varying as shown below:
 
