@@ -1,0 +1,70 @@
+.route-map-wrap {
+  margin: 1.25em 0;
+}
+
+textarea.route-map-data {
+  display: none;
+}
+
+.route-map {
+  height: 420px;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.route-map img {
+  border: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+}
+
+.route-map-marker {
+  background: transparent;
+  border: 0;
+}
+
+.route-map-dot {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff2a2a;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+.route-map-ident {
+  display: block;
+  margin-top: 3px;
+  margin-left: -18px;
+  min-width: 48px;
+  text-align: center;
+  font-family: "Roboto Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 4px #000, 0 1px 2px #000;
+  white-space: nowrap;
+}
+
+.route-map-hint {
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: "Roboto Mono", monospace;
+}
+
+.leaflet-popup-content {
+  font-family: "Fira Sans", sans-serif;
+  margin: 10px 12px;
+}
+
+@media screen and (min-width: 800px) {
+  .route-map {
+    height: 500px;
+  }
+}

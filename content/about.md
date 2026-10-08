@@ -4,11 +4,11 @@ type: page
 draft: false
 ---
 
-I am a Solution Architect at [AWS](https://aws.amazon.com/hpc/) focused on AI/ML, specifically distributed training. My background is in High-Performance and Scientific Computing. I joined Amazon in 2017 and I helped build and launch [AWS ParallelCluster](https://github.com/aws/aws-parallelcluster), an open-source product to build High-Performance computing clusters. I then built out [ParallelCluster Manager](https://pcluster.cloud) (now called ParallelCluster UI), a web-console for ParallelCluster. I'm a [Pilot and a Flight Instructor (CFI, CFII)](#aviation-). I own two airplanes and have [flown to all 50 US States](#50-states-) to raise money for Angel Flight West. I run long distances and regularly run [100 miles at a time](#running-). In college I gave the [graduation speech](#college-) for the CS department and graduated in four years with a bachelor and masters degree.
+I am a Solution Architect at Nvidia focused on AI/ML training. Previously I was at [AWS](https://aws.amazon.com/hpc/) as a AI/ML specialist Solution Architect, specifically focused on distributed training. My background is in High-Performance and Scientific Computing. I joined Amazon in 2017 and I helped build and launch [AWS ParallelCluster](https://github.com/aws/aws-parallelcluster), an open-source product to build High-Performance computing clusters. I then built out [ParallelCluster Manager](https://pcluster.cloud) (now called ParallelCluster UI), a web-console for ParallelCluster. I'm a [Pilot and a Flight Instructor (CFI, CFII)](#aviation-). I own two airplanes and have [flown to all 50 US States](#50-states-) to raise money for Angel Flight West. I run long distances and regularly run [100 miles at a time](#running-). In college I gave the [graduation speech](#college-) for the CS department and graduated in four years with a bachelor and masters degree.
 
 ## Aviation ✈️
 
-I started flying in 2017 and since I've accumulated well over 1,000 hours of total flight time in airplanes ranging from seaplanes to speedy, modern retractable-gear aircraft. I own a 1947 Cessna 140 [N3701V](https://flightaware.com/live/flight/N3701V) and a 1969 Mooney M20k [N231ER](https://flightaware.com/live/flight/N231ER). I'm an FAA rated Flight Instructor (CFI) and instrument flight instructor (CFII). I taught my fiancé Alex how to fly and now she's an active pilot. You can learn to [fly with me!](https://www.youtube.com/watch?v=qCqnzM-LuqA&t=1s) ✈️
+I started flying in 2017 and since I've accumulated well over 1,500 hours of total flight time in airplanes ranging from seaplanes to speedy, modern retractable-gear aircraft. I own a 1976 Piper Supercub [N9786P](https://flightaware.com/live/flight/N9786P) and a 1969 Mooney M20k [N231ER](https://flightaware.com/live/flight/N231ER). I'm an FAA rated Flight Instructor (CFI) and instrument flight instructor (CFII). I taught my fiancé Alex how to fly and now she's an active pilot. You can learn to [fly with me!](https://www.youtube.com/watch?v=qCqnzM-LuqA&t=1s) ✈️
 
 {{< rawhtml >}}
 <p align="center">
@@ -25,7 +25,7 @@ The trip took 31 days and in addition to landing in each state we also ran a mil
 
 ## Running 🏃🏻‍♂️
 
-I'm an avid runner, I completed my first marathon at age 15 and haven't stopped running since. I've completed numerous ultra-marathon races including Canyons 100M, Oregon Cascades 100M, [UTMB](https://montblanc.utmb.world/races/UTMB) and a bunch of shorter races. My current goal is to qualify for Hardrock 100 or Western States.
+I'm an avid runner, I completed my first marathon at age 15 and haven't stopped running since. I've completed numerous ultra-marathon races including Canyons 100M, Oregon Cascades 100M, [UTMB](https://montblanc.utmb.world/races/UTMB) and a bunch of shorter races. My current goal is to run Hardrock 100 and Western States.
 
 {{< rawhtml >}}
 <p align="center">
@@ -55,4 +55,4 @@ Out of all my achievements the one I am most proud of is marrying [my wife Alex]
 
 ## People who inspire me 😎
 
-I take inspiration from [DHH](https://dhh.dk/), [Feross](https://feross.org), and [Nikil](http://www.nikilster.com/about.html).
+I take inspiration from [DHH](https://dhh.dk/), [Feross](https://feross.org), [Nikil](http://www.nikilster.com/about.html), and [Peter Levels](https://x.com/levelsio).

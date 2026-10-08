@@ -1,0 +1,5 @@
+{{- $id := .Get "id" | default (printf "route-map-%d" .Ordinal) -}}
+<div class="route-map-wrap">
+	<div id="{{ $id }}" class="route-map" role="img" aria-label="Interactive route map"></div>
+	<textarea id="{{ $id }}-data" class="route-map-data" hidden readonly>{{ trim .Inner " \n\r\t" }}</textarea>
+</div>

@@ -13,10 +13,12 @@ googleAnalytics = "G-3HSS44JHGS"
 disqusShortname = "swsmith-cc"
 
 [params]
+disqusShortname = "swsmith-cc"
+
 subtitle = "keeping up with Sean"
 og_image = "/img/sean.jpg"
 customJS = ['js/section-link.js']
-customcss = ['css/button.css']
+customcss = ['css/button.css', 'css/gallery.css', 'css/routemap.css']
 
 # Social Tags
 [[params.social]]
@@ -49,7 +51,7 @@ url = "mailto:sean@swsmith.cc"
 
 [[menu.main]]
 name = "Posts"
-url = "/posts.html"
+url = "/posts/"
 weight = 1
 
 [[menu.main]]

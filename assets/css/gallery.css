@@ -1,0 +1,37 @@
+.photo-hero {
+  display: block;
+  margin: 1em auto;
+  border: 0 !important;
+  max-height: 420px;
+  width: auto;
+  max-width: 100%;
+}
+
+.photo-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 1.25em 0;
+}
+
+.photo-row img {
+  border: 0 !important;
+  height: 300px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+@media screen and (max-width: 600px) {
+  .photo-row {
+    flex-direction: column;
+  }
+
+  .photo-row img {
+    height: auto;
+    max-height: 360px;
+    width: 100%;
+  }
+}
